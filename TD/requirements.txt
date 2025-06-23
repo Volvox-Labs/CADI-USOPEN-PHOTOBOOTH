@@ -1,0 +1,3 @@
+PyYAML
+git+https://github.com/Volvox-Labs/tdconfig.git
+prometheus_client

@@ -1,0 +1,39 @@
+{
+	"Start": {
+		"name": "Start",
+		"label": "Start",
+		"page": "UI",
+		"style": "Pulse",
+		"default": false,
+		"enable": true,
+		"startSection": false,
+		"readOnly": false,
+		"mode": "CONSTANT",
+		"bindExpr": "",
+		"enableExpr": null
+	},
+	"Scene": {
+		"name": "Scene",
+		"label": "Scene",
+		"page": "UI",
+		"style": "Menu",
+		"default": "scene1",
+		"enable": true,
+		"startSection": true,
+		"readOnly": false,
+		"mode": "CONSTANT",
+		"bindExpr": "",
+		"enableExpr": null,
+		"menuSource": "",
+		"menuNames": [
+			"scene1",
+			"scene2",
+			"scene3"
+		],
+		"menuLabels": [
+			"scene1",
+			"scene2",
+			"scene3"
+		]
+	}
+}

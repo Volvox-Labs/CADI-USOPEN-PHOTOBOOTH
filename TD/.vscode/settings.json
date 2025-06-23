@@ -1,0 +1,6 @@
+{
+  "python.linting.pylintEnabled": true,
+  "python.linting.enabled": true,
+  "python.analysis.extraPaths": ["${workspaceFolder}/dep/python"],
+  "python.autoComplete.extraPaths": ["${workspaceFolder}/dep/python"]
+}

@@ -1,0 +1,54 @@
+{
+	"Cuein": {
+		"name": "Cuein",
+		"label": "Cue In",
+		"page": "State",
+		"style": "Toggle",
+		"default": false,
+		"enable": true,
+		"startSection": false,
+		"readOnly": false,
+		"enableExpr": null,
+		"mode": "CONSTANT",
+		"expr": null
+	},
+	"Cueout": {
+		"name": "Cueout",
+		"label": "Cue Out",
+		"page": "State",
+		"style": "Toggle",
+		"default": false,
+		"enable": true,
+		"startSection": false,
+		"readOnly": false,
+		"enableExpr": null,
+		"mode": "CONSTANT",
+		"expr": null
+	},
+	"Visible": {
+		"name": "Visible",
+		"label": "Visible",
+		"page": "State",
+		"style": "Toggle",
+		"default": false,
+		"enable": true,
+		"startSection": false,
+		"readOnly": false,
+		"enableExpr": null,
+		"mode": "CONSTANT",
+		"expr": null
+	},
+	"Selected": {
+		"name": "Selected",
+		"label": "Selected",
+		"page": "State",
+		"style": "Toggle",
+		"default": false,
+		"enable": true,
+		"startSection": false,
+		"readOnly": false,
+		"enableExpr": null,
+		"mode": "CONSTANT",
+		"expr": null
+	}
+}

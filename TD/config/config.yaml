@@ -1,0 +1,63 @@
+---
+vars:
+  mode: ${MODE}
+
+default:
+  td:
+    project:
+      performOnStart: False
+    ui:
+      performMode: False
+  vars:
+    RESX: 1280
+    RESY: 720
+    assets_path: ${ASSETS_PATH}
+    headless: False
+  ops:
+    '/project1/output':
+      par:
+        Devresscale:
+          val: 1
+    '/tools/perf_logs':
+      par:
+        Enabled:
+          val: False
+        # log performance every minute
+        Loginterval:
+          val: 60
+    '/tools/console_clear':
+      par:
+        Enabled:
+          val: False
+        # clear the console every hour minute
+        Interval:
+          val: 3600
+
+dev:
+  td:
+    ui:
+      performMode: False
+  vars:
+    devVar: 123
+
+production:
+  td:
+    project:
+      performOnStart: True
+    ui:
+      performMode: True
+  ops:
+    '/tools/perf_logs':
+      par:
+        Enabled:
+          val: True
+        # log performance every minute
+        Loginterval:
+          val: 60
+    '/tools/console_clear':
+      par:
+        Enabled:
+          val: True
+        # clear the console every hour minute
+        Interval:
+          val: 3600
