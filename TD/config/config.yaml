@@ -9,8 +9,8 @@ default:
     ui:
       performMode: False
   vars:
-    RESX: 1280
-    RESY: 720
+    RESX: 2160
+    RESY: 3840
     assets_path: ${ASSETS_PATH}
     headless: False
   ops:
