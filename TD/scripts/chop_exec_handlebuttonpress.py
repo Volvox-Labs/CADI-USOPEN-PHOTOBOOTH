@@ -8,5 +8,5 @@
 # Make sure the corresponding toggle is enabled in the CHOP Execute DAT.
 
 def onOffToOn(channel, sampleIndex, val, prev):
-	parent.current_scene.HandleButtonPress(parent.current_scene.name)
+	parent.current_scene.HandleMosaicPromptAnswer(0)
 	return
