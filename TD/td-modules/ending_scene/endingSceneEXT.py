@@ -17,7 +17,7 @@ except ModuleNotFoundError():
 
 
 
-class MosaicPromptEXT(PhotoboothSceneEXT):
+class EndingSceneEXT(PhotoboothSceneEXT):
     def __init__(self, myop: OP) -> None:
         PhotoboothSceneEXT.__init__(self, myop)
         pass
@@ -25,11 +25,6 @@ class MosaicPromptEXT(PhotoboothSceneEXT):
     def OnInit(self):
         # return False if initialization fails
         return True
-    
-    def HandleMosaicPromptAnswer(self, val):
-        # DO SOMETHING WITH VALUE 
-        self.Me.par.Exitscene.pulse()
-        pass
 
     # Below is an example of a parameter callback. Simply create a method that starts with "_on" and then the name of the parameter.
 

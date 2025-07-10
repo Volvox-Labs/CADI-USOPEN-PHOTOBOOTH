@@ -10,12 +10,15 @@ except ModuleNotFoundError:
     from vvox_tdtools.td_mock import OP  #pylint: disable=ungrouped-imports 
     # from tdconfig import TDJSON as TDJ
     # from tdconfig import TDFunctions as TDF
+try:
+    from photoboothsceneEXT import PhotoboothSceneEXT  #type: ignore
+except ModuleNotFoundError():
+    from ...py_modules.photoboothsceneEXT import PhotoboothSceneEXT #pylint: disable=relative-beyond-top-level
 
 
-class QrcodeEXT(BaseEXT):
+class QrcodeEXT(PhotoboothSceneEXT):
     def __init__(self, myop: OP) -> None:
-        BaseEXT.__init__(self, myop, par_callback_on=True)
-        self._createControlsPage()
+        PhotoboothSceneEXT.__init__(self, myop)
         pass
 
     def OnInit(self):
@@ -38,16 +41,4 @@ class QrcodeEXT(BaseEXT):
     # def OnEventLoop1(self):
     #     self.Print('every second')
     #     pass
-
-
-    def _createControlsPage(self) -> None:
-        page = self.GetPage('Controls')
-        pars = [
-            # ParTemplate('Example Toggle', par_type='Toggle', label='Example Label'),
-
-        ]
-        for par in pars:
-            par.createPar(page)
-
-        pass
 
