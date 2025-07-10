@@ -25,6 +25,12 @@ class PhotoModeEXT(PhotoboothSceneEXT):
         # return False if initialization fails
         return True
 
+
+    def HandleButtonPress(self, button_name: str) -> None:
+        op.Camera.par.Capture.pulse()
+        super().HandleButtonPress(button_name)
+        # Implement your button handling logic here
+        pass
     # Below is an example of a parameter callback. Simply create a method that starts with "_on" and then the name of the parameter.
 
     # def _onExampletoggle(self, par):
