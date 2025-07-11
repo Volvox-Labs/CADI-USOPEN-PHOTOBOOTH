@@ -16,7 +16,6 @@ class PhotoboothSceneEXT(BaseEXT):
     def __init__(self, myop: OP) -> None:
         BaseEXT.__init__(self, myop, par_callback_on=True)
         self._createControlsPage()
-        print("in parent!")
         pass
 
     def _onEnterscene(self):
@@ -36,9 +35,13 @@ class PhotoboothSceneEXT(BaseEXT):
         if current_scene == op.state_control.par.Scenename.eval():
             self.Me.par.Exitscene.pulse()
             
-        
         pass
 
+    def HandleLoadingComplete(self, current_scene: str) -> None:
+        if current_scene == op.state_control.par.Scenename.eval():
+            self.Me.par.Exitscene.pulse()
+        pass
+    
     def OnInit(self):
         # return False if initialization fails
         return True
@@ -62,16 +65,13 @@ class PhotoboothSceneEXT(BaseEXT):
 
 
     def _createControlsPage(self) -> None:
-        print("Creatin g")
         page = self.GetPage('Controls')
         pars = [
             ParTemplate('EnterScene', par_type='Pulse', label='EnterScene'),
             ParTemplate('ExitScene', par_type='Pulse', label='ExitScene'),
         ]
         for par in pars:
-            print(page)
             par.createPar(page)
-        print("Done creating")
 
         pass
 
