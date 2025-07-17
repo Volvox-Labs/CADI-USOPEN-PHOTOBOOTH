@@ -45,7 +45,7 @@ class CameraControlEXT(BaseEXT):
         # This method should handle the camera feed capture logic
         print('Capturing camera feed...')
         timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
-        filename = f"/capture_{timestamp}.png"
+        filename = f"capture_{timestamp}.png"
         op("camera_capture").par.file = self.Me.par.Outputpath + filename
         print(f"Saving camera feed to {filename}")
         op("camera_capture").par.addframe.pulse()

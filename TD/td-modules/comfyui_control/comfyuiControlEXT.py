@@ -19,6 +19,7 @@ class ComfyuiControlEXT(BaseEXT):
         self._createControlsPage()
         self.Me.par.opshortcut = 'comfyui_control'
         self.in_progress_prompts = op("in_progress_prompts")
+        self.comfyui_url = root.var("comfyui_url")
         self.prompt_text =  """
 	{
 	"10": {
@@ -201,7 +202,7 @@ class ComfyuiControlEXT(BaseEXT):
         print("sourceFile: ", sourceFile)
         p = {"prompt": prompt}
         data = json.dumps(p).encode('utf-8')        
-        op("webclient1").request("http://127.0.0.1:8188/prompt","POST", data=data)
+        op("webclient1").request(f"{self.comfyui_url}/prompt","POST", data=data)
         self.Me.par.Waitforcompletion = True
         op('completion_timer').par.start.pulse()
         
@@ -250,7 +251,7 @@ class ComfyuiControlEXT(BaseEXT):
     
     def CheckForCompletion(self) -> None:
         print("checking")
-        op("webclient1").request("http://127.0.0.1:8188/history","GET")
+        op("webclient1").request(f"{self.comfyui_url}/history","GET")
         pass
 
 

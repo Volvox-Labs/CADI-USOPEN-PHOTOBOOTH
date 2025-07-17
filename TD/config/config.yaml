@@ -12,6 +12,9 @@ default:
     RESX: 2160
     RESY: 3840
     assets_path: ${ASSETS_PATH}
+    comfyui_url: ${COMFYUI_URL}
+    comfyui_inputs_dir: ${COMFYUI_INPUTS_DIR}
+    comfyui_outputs_dir: ${COMFYUI_OUTPUTS_DIR}
     headless: False
   ops:
     '/project1/output':
