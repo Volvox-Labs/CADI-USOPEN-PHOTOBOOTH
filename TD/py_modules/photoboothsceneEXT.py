@@ -38,6 +38,7 @@ class PhotoboothSceneEXT(BaseEXT):
         pass
 
     def HandleLoadingComplete(self, current_scene: str) -> None:
+        print("here")
         if current_scene == op.state_control.par.Scenename.eval():
             self.Me.par.Exitscene.pulse()
         pass

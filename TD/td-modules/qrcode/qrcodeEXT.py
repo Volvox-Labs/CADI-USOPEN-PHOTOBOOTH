@@ -1,6 +1,6 @@
 # pylint: disable=missing-docstring,logging-fstring-interpolation
 from vvox_tdtools.base import BaseEXT
-# from vvox_tdtools.parhelper import ParTemplate
+from vvox_tdtools.parhelper import ParTemplate
 try:
     # import td
     from td import OP # type: ignore
@@ -19,12 +19,24 @@ except ModuleNotFoundError():
 class QrcodeEXT(PhotoboothSceneEXT):
     def __init__(self, myop: OP) -> None:
         PhotoboothSceneEXT.__init__(self, myop)
+        page = self.GetPage('QRCodeControls')
+        pars = [
+            ParTemplate("QrCodeSceneLength", par_type="Int", label="QrCodeSceneLength"),
+
+        ]
+        for par in pars:
+            par.createPar(page)
         pass
 
     def OnInit(self):
         # return False if initialization fails
         return True
 
+
+    def _onEnterscene(self):
+        self.Me.op("loading_timer").par.start.pulse()
+        op.fade_control.par.Fadein.pulse()
+        pass
     # Below is an example of a parameter callback. Simply create a method that starts with "_on" and then the name of the parameter.
 
     # def _onExampletoggle(self, par):
