@@ -1,6 +1,6 @@
 # pylint: disable=missing-docstring,logging-fstring-interpolation
 from vvox_tdtools.base import BaseEXT
-# from vvox_tdtools.parhelper import ParTemplate
+from vvox_tdtools.parhelper import ParTemplate
 try:
     # import td
     from td import OP # type: ignore
@@ -10,27 +10,19 @@ except ModuleNotFoundError:
     from vvox_tdtools.td_mock import OP  #pylint: disable=ungrouped-imports 
     # from tdconfig import TDJSON as TDJ
     # from tdconfig import TDFunctions as TDF
-try:
-    from photoboothsceneEXT import PhotoboothSceneEXT  #type: ignore
-except ModuleNotFoundError():
-    from ...py_modules.photoboothsceneEXT import PhotoboothSceneEXT #pylint: disable=relative-beyond-top-level
 
 
-class PhotoModeEXT(PhotoboothSceneEXT):
+class PosterControlEXT(BaseEXT):
     def __init__(self, myop: OP) -> None:
-        PhotoboothSceneEXT.__init__(self, myop)
+        BaseEXT.__init__(self, myop, par_callback_on=True)
+        self.Me.par.opshortcut = 'poster_control'
+        self._createControlsPage()
         pass
 
     def OnInit(self):
         # return False if initialization fails
         return True
 
-
-    def HandleButtonPress(self, button_name: str) -> None:
-        op.camera_control.par.Capturecamerafeed.pulse()
-        super().HandleButtonPress(button_name)
-        # Implement your button handling logic here
-        pass
     # Below is an example of a parameter callback. Simply create a method that starts with "_on" and then the name of the parameter.
 
     # def _onExampletoggle(self, par):
@@ -47,4 +39,19 @@ class PhotoModeEXT(PhotoboothSceneEXT):
     # def OnEventLoop1(self):
     #     self.Print('every second')
     #     pass
+
+
+    def _createControlsPage(self) -> None:
+        page = self.GetPage('Controls')
+        pars = [
+            ParTemplate("CaptureMosaicPhoto", par_type="Pulse", label="CaptureMosaicPhoto"),
+            ParTemplate('MosaicCapturePath', par_type='Folder', label='MosaicCapturePath'),
+            ParTemplate('CapturePath', par_type='File', label='CapturePath'),
+            ParTemplate('UseTestCapture', par_type='Toggle', label='UseTestCapture'),
+            ParTemplate("TestCaptureOption",par_type="Int", label="TestCaptureOption")
+        ]
+        for par in pars:
+            par.createPar(page)
+
+        pass
 

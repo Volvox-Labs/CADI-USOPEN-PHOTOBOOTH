@@ -1,6 +1,7 @@
 # pylint: disable=missing-docstring,logging-fstring-interpolation
 from vvox_tdtools.base import BaseEXT
-# from vvox_tdtools.parhelper import ParTemplate
+from vvox_tdtools.parhelper import ParTemplate
+import datetime
 try:
     # import td
     from td import OP # type: ignore
@@ -10,27 +11,19 @@ except ModuleNotFoundError:
     from vvox_tdtools.td_mock import OP  #pylint: disable=ungrouped-imports 
     # from tdconfig import TDJSON as TDJ
     # from tdconfig import TDFunctions as TDF
-try:
-    from photoboothsceneEXT import PhotoboothSceneEXT  #type: ignore
-except ModuleNotFoundError():
-    from ...py_modules.photoboothsceneEXT import PhotoboothSceneEXT #pylint: disable=relative-beyond-top-level
 
 
-class PhotoModeEXT(PhotoboothSceneEXT):
+class CameraControlEXT(BaseEXT):
     def __init__(self, myop: OP) -> None:
-        PhotoboothSceneEXT.__init__(self, myop)
+        BaseEXT.__init__(self, myop, par_callback_on=True)
+        self.Me.par.opshortcut = 'camera_control'
+        self._createControlsPage()
         pass
 
     def OnInit(self):
         # return False if initialization fails
         return True
 
-
-    def HandleButtonPress(self, button_name: str) -> None:
-        op.camera_control.par.Capturecamerafeed.pulse()
-        super().HandleButtonPress(button_name)
-        # Implement your button handling logic here
-        pass
     # Below is an example of a parameter callback. Simply create a method that starts with "_on" and then the name of the parameter.
 
     # def _onExampletoggle(self, par):
@@ -47,4 +40,26 @@ class PhotoModeEXT(PhotoboothSceneEXT):
     # def OnEventLoop1(self):
     #     self.Print('every second')
     #     pass
+
+    def _onCapturecamerafeed(self, par):
+        # This method should handle the camera feed capture logic
+        print('Capturing camera feed...')
+        timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
+        filename = f"/capture_{timestamp}.png"
+        op("camera_capture").par.file = self.Me.par.Outputpath + filename
+        print(f"Saving camera feed to {filename}")
+        op("camera_capture").par.addframe.pulse()
+        # Implement the logic to capture the camera feed here
+        pass
+
+    def _createControlsPage(self) -> None:
+        page = self.GetPage('Controls')
+        pars = [
+            ParTemplate('CaptureCameraFeed', par_type='Pulse', label='CaptureCameraFeed'),
+            ParTemplate("OutputPath", par_type='Folder', label='OutputPath'),
+        ]
+        for par in pars:
+            par.createPar(page)
+
+        pass
 

@@ -6,6 +6,8 @@ dep/_module_import/*
 # mac files
 *.DS_STORE
 
+TD/td-modules/*/*.mov
+
 # Touchdesigner general
 Backup/
 CrashAutoSave.*.toe

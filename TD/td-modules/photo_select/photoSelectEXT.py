@@ -1,6 +1,7 @@
 # pylint: disable=missing-docstring,logging-fstring-interpolation
 from vvox_tdtools.base import BaseEXT
 from vvox_tdtools.parhelper import ParTemplate
+import datetime
 try:
     # import td
     from td import OP  # type: ignore
@@ -20,6 +21,7 @@ except ModuleNotFoundError():
 class PhotoSelectEXT(PhotoboothSceneEXT):
     def __init__(self, myop: OP) -> None:
         PhotoboothSceneEXT.__init__(self, myop)
+        self.Me.par.opshortcut = 'photo_select'
         self._createPhotoSelectControls()
         pass
 
@@ -29,7 +31,14 @@ class PhotoSelectEXT(PhotoboothSceneEXT):
 
     def HandleButtonPress(self, current_scene):
         # DO SOMETHING HERE WITH THE IMAGE
-        self.Me.par.Exitscene.pulse() 
+        timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
+        filename = f"/mosaic_{timestamp}.png"
+        mosaic_photo_index = self.Me.op(f"photo_button{self.Me.par.Selectedphoto.eval()}").par.Index.eval()
+        op.poster_control.par.Coloroption = (mosaic_photo_index)
+        op.poster_control.op("mosaic_capture").par.file = op.poster_control.par.Mosaiccapturepath + filename
+        op.poster_control.par.Capturemosaicphoto.pulse()
+        print("Done ")
+        # self.Me.par.Exitscene.pulse()
         pass
 
     def HandleImageSelected(self, channel, button_state):
@@ -39,6 +48,7 @@ class PhotoSelectEXT(PhotoboothSceneEXT):
         self.Me.par.Selectedphoto = int(image_index)
 
         self.Me.par.Photoselected = button_state
+        pass
 
     # Below is an example of a parameter callback. Simply create a method that starts with "_on" and then the name of the parameter.
 
@@ -62,13 +72,14 @@ class PhotoSelectEXT(PhotoboothSceneEXT):
         pars = [
             ParTemplate('SelectedPhoto', par_type='Int',
                         label='SelectedPhoto'),
+
         ]
-        
+
         photo_selected = ParTemplate(
             'PhotoSelected', par_type='Toggle', label='PhotoSelected')
         photo_selected.readOnly = True
         pars.append(photo_selected)
-        
+
         for par in pars:
             par.createPar(page)
 
