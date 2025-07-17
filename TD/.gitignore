@@ -2,7 +2,8 @@ dep/_module_import/*
 
 # vscode pieces
 # .vscode/*
-
+*.mov
+*.png
 # mac files
 *.DS_STORE
 
