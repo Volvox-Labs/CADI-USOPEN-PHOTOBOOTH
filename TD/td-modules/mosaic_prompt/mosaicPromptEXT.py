@@ -28,7 +28,7 @@ class MosaicPromptEXT(PhotoboothSceneEXT):
     
     def HandleMosaicPromptAnswer(self, val):
         # DO SOMETHING WITH VALUE 
-        self.Me.par.Exitscene.pulse()
+        super().HandleButtonPress(self.Me.name)
         pass
 
     # Below is an example of a parameter callback. Simply create a method that starts with "_on" and then the name of the parameter.

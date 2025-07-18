@@ -37,8 +37,7 @@ class PhotoSelectEXT(PhotoboothSceneEXT):
         op.poster_control.par.Coloroption = (mosaic_photo_index)
         op.poster_control.op("mosaic_capture").par.file = op.poster_control.par.Mosaiccapturepath + filename
         op.poster_control.par.Capturemosaicphoto.pulse()
-        print("Done ")
-        self.Me.par.Exitscene.pulse()
+        super().HandleButtonPress(current_scene)
         pass
 
     def HandleImageSelected(self, channel, button_state):

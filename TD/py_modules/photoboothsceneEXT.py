@@ -31,6 +31,7 @@ class PhotoboothSceneEXT(BaseEXT):
     def HandleButtonPress(self, current_scene):
         print(self.Me)
         current_scene = self.Me.name
+        self.Me.par.Buttonpress.pulse()
         print(f"Handling button press for scene: {current_scene}")
         if current_scene == op.state_control.par.Scenename.eval():
             self.Me.par.Exitscene.pulse()
