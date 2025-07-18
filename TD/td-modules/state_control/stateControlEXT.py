@@ -25,14 +25,18 @@ class StateControlEXT(BaseEXT):
     
     def HandleFadeOutComplete(self):
         next_state = self.Me.op("state_table")[self.Me.par.State, "goto"].val
+        next_fade_variation = self.Me.op("state_table")[self.Me.par.State, "fade_variation"].val
+        op.fade_control.par.Fadevariation = next_fade_variation
         self.Me.par.State = next_state
         self.Me.par.Sceneop.eval().par.Enterscene.pulse()
+        op.fade_control.par.Fadeincomplete = 0
         pass
     # Below is an example of a parameter callback. Simply create a method that starts with "_on" and then the name of the parameter.
 
     def _onResetphotobooth(self):
         self.Me.par.State = 1
         self.Me.par.Sceneop.eval().par.Enterscene.pulse()
+        op.fade_control.par.Fadevariation = self.Me.op("state_table")[1, "fade_variation"].val
 
     # def _onExampletoggle(self, par):
     #     self.Logger.debug(f"_onExampleToggle - val: {par.eval()}")

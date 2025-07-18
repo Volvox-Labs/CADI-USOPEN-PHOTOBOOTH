@@ -23,6 +23,10 @@ class FadeControlEXT(BaseEXT):
         # return False if initialization fails
         return True
 
+    def HandleFadeInComplete(self):
+        current_scene = op.state_control.par.Sceneop.eval()
+        if current_scene.par.Buttonpressed:
+            current_scene.HandleButtonPress(current_scene.name)
     # def HandleFadeOutComplete(self):
         
     #     pass
@@ -50,7 +54,10 @@ class FadeControlEXT(BaseEXT):
         pars = [
             ParTemplate('Init', par_type='Pulse', label='Init'),
             ParTemplate('FadeIn', par_type='Pulse', label='FadeIn'),
-            ParTemplate('FadeOut', par_type='Pulse', label='FadeOut')
+            ParTemplate('FadeOut', par_type='Pulse', label='FadeOut'),
+            ParTemplate("FadeInComplete",par_type="Toggle",label="FadeInComplete"),
+            ParTemplate("FadeVariation",par_type="Int",label="FadeVariation")
+            
             
         ]
         for par in pars:

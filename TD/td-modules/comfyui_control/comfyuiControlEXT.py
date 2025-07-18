@@ -218,9 +218,14 @@ class ComfyuiControlEXT(BaseEXT):
             if status["status_str"] == "success":
                 #print(f"✅ Prompt {prompt_id} finished.")
                 self.Me.par.Waitforcompletion = False
-                print("The Prompt Completed: " + status["status_str"])  # Return the full prompt result if needed
-                handstat = prompt_data["outputs"]["36"]["text"][0]
+                print("The Prompt Completed:  " + status["status_str"])  # Return the full prompt result if needed
+                handstat = bool(prompt_data["outputs"]["36"]["text"][0])
                 print("Hand Status: " + str(handstat))
+                # if handstat:
+                #     op.loading_control.op("GFX_loading_Alpha_").par.cue = 0
+                #     op.state_control.par.State = 3
+                # else:
+                #     print("NO HAND")
                 images = prompt_data["outputs"]["90"]["images"]
                 if images:
                     image_path = images[0]["filename"]

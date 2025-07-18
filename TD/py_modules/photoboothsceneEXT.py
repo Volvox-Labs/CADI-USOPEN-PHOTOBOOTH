@@ -21,6 +21,7 @@ class PhotoboothSceneEXT(BaseEXT):
     def _onEnterscene(self):
         self.Print('Entering Photobooth Scene')
         op.fade_control.par.Fadein.pulse()
+        self.Me.par.Buttonpressed = 0
         pass
     
     def _onExitscene(self):
@@ -32,8 +33,9 @@ class PhotoboothSceneEXT(BaseEXT):
         print(self.Me)
         current_scene = self.Me.name
         self.Me.par.Buttonpress.pulse()
+        self.Me.par.Buttonpressed = 1
         print(f"Handling button press for scene: {current_scene}")
-        if current_scene == op.state_control.par.Scenename.eval():
+        if current_scene == op.state_control.par.Scenename.eval() and op.fade_control.par.Fadeincomplete.eval():
             self.Me.par.Exitscene.pulse()
             
         pass
@@ -72,6 +74,8 @@ class PhotoboothSceneEXT(BaseEXT):
             ParTemplate('EnterScene', par_type='Pulse', label='EnterScene'),
             ParTemplate('ExitScene', par_type='Pulse', label='ExitScene'),
             ParTemplate("ButtonPress", par_type="Pulse", label="ButtonPress"),
+            ParTemplate("ButtonPressed", par_type="Toggle", label="ButtonPressed"),
+            
         ]
         for par in pars:
             par.createPar(page)

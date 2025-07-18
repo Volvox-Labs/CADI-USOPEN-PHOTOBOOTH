@@ -26,8 +26,20 @@ class AttractVideoSceneEXT(PhotoboothSceneEXT):
         # return False if initialization fails
         return True
 
+    def _onEnterscene(self):
+        self.Me.op("intro_video").par.play = 1
+        self.Me.op("intro_video").par.cuepulse.pulse()
+        super()._onEnterscene()
+        pass
+        
+    def HandleButtonPress(self, current_scene):
+        self.Me.op("intro_video").par.play = 0
+        super().HandleButtonPress(current_scene)
+        pass
+
     def HandleVideoComplete(self):
         self.Me.par.Exitscene.pulse()
+        pass
     # Below is an example of a parameter callback. Simply create a method that starts with "_on" and then the name of the parameter.
 
     # def _onExampletoggle(self, par):

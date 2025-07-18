@@ -45,6 +45,10 @@ class PhotoSelectEXT(PhotoboothSceneEXT):
         super().HandleButtonPress(current_scene)
         pass
 
+    def HandleRetakePhoto(self):
+        op.state_control.par.State = 3
+        # super().HandleButtonPress("attract_mode_scene")
+
     def HandleImageSelected(self, channel, button_state):
         print(
             f"HandleImageSelected - channel: {channel.name}, button_state: {button_state}")
