@@ -23,6 +23,11 @@ class PhotoSelectEXT(PhotoboothSceneEXT):
         PhotoboothSceneEXT.__init__(self, myop)
         self.Me.par.opshortcut = 'photo_select'
         self._createPhotoSelectControls()
+        self.CurrentButton = 0
+        for i in range(1,5):
+            self.Me.op(f"photo_button{i}").par.Clicked = 0
+        self.Me.op("photo_button3").par.Clicked = 1
+        self.Me.par.Selectedphoto = 3
         pass
 
     def OnInit(self):
@@ -44,9 +49,14 @@ class PhotoSelectEXT(PhotoboothSceneEXT):
         print(
             f"HandleImageSelected - channel: {channel.name}, button_state: {button_state}")
         image_index = channel.name.replace('button', '')
+        self.Me.op(f"photo_button{self.Me.par.Selectedphoto}").par.Clicked = 0
+        self.Me.op(f"photo_button{image_index}").par.Clicked = 1
+        
+        # if self.Me.par.Photoselected:
+            # self.Me.op(f"photo_button{image_index}").par.
         self.Me.par.Selectedphoto = int(image_index)
-
-        self.Me.par.Photoselected = button_state
+        
+        # self.Me.par.Photoselected = button_state
         pass
 
     # Below is an example of a parameter callback. Simply create a method that starts with "_on" and then the name of the parameter.
