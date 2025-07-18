@@ -250,7 +250,6 @@ class ComfyuiControlEXT(BaseEXT):
         pass
     
     def CheckForCompletion(self) -> None:
-        print("checking")
         op("webclient1").request(f"{self.comfyui_url}/history","GET")
         pass
 
