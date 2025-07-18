@@ -1,6 +1,6 @@
 # pylint: disable=missing-docstring,logging-fstring-interpolation
 from vvox_tdtools.base import BaseEXT
-from vvox_tdtools.parhelper import ParTemplate
+# from vvox_tdtools.parhelper import ParTemplate
 try:
     # import td
     from td import OP # type: ignore
@@ -12,37 +12,12 @@ except ModuleNotFoundError:
     # from tdconfig import TDFunctions as TDF
 
 
-class PhotoboothSceneEXT(BaseEXT):
+class AudioControlEXT(BaseEXT):
     def __init__(self, myop: OP) -> None:
         BaseEXT.__init__(self, myop, par_callback_on=True)
         self._createControlsPage()
         pass
 
-    def _onEnterscene(self):
-        self.Print('Entering Photobooth Scene')
-        op.fade_control.par.Fadein.pulse()
-        pass
-    
-    def _onExitscene(self):
-        self.Print('Exiting Photobooth Scene')
-        op.fade_control.par.Fadeout.pulse()
-        pass
-    
-    def HandleButtonPress(self, current_scene):
-        print(self.Me)
-        current_scene = self.Me.name
-        print(f"Handling button press for scene: {current_scene}")
-        if current_scene == op.state_control.par.Scenename.eval():
-            self.Me.par.Exitscene.pulse()
-            
-        pass
-
-    def HandleLoadingComplete(self, current_scene: str) -> None:
-        print("here")
-        if current_scene == op.state_control.par.Scenename.eval():
-            self.Me.par.Exitscene.pulse()
-        pass
-    
     def OnInit(self):
         # return False if initialization fails
         return True
@@ -68,9 +43,8 @@ class PhotoboothSceneEXT(BaseEXT):
     def _createControlsPage(self) -> None:
         page = self.GetPage('Controls')
         pars = [
-            ParTemplate('EnterScene', par_type='Pulse', label='EnterScene'),
-            ParTemplate('ExitScene', par_type='Pulse', label='ExitScene'),
-            ParTemplate("ButtonPress", par_type="Pulse", label="ButtonPress"),
+            # ParTemplate('Example Toggle', par_type='Toggle', label='Example Label'),
+
         ]
         for par in pars:
             par.createPar(page)
