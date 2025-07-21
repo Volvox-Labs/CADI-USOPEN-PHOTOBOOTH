@@ -35,7 +35,9 @@ class QrcodeEXT(PhotoboothSceneEXT):
 
     def _onEnterscene(self):
         self.Me.op("loading_timer").par.start.pulse()
+        super()._onEnterscene()
         op.fade_control.par.Fadein.pulse()
+        
         pass
     # Below is an example of a parameter callback. Simply create a method that starts with "_on" and then the name of the parameter.
 

@@ -23,6 +23,7 @@ class PhotoboothSceneEXT(BaseEXT):
         self.Print('Entering Photobooth Scene')
         op.fade_control.par.Fadein.pulse()
         self.Me.par.Buttonpressed = 0
+        op.state_control.par.Nextstate = op.state_control.op("state_table")[op.state_control.Me.par.State, "goto"].val
         pass
     
     def _onExitscene(self):
