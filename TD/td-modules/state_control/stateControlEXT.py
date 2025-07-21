@@ -17,11 +17,19 @@ class StateControlEXT(BaseEXT):
         BaseEXT.__init__(self, myop, par_callback_on=True)
         self._createControlsPage()
         self.Me.par.opshortcut = "state_control"
+        self.HomeScene = op.state_control.op("state_table").findCell("attract_scene").row
         pass
 
     def OnInit(self):
         # return False if initialization fails
         return True
+    
+    def HandleExperienceComplete(self):
+        states = op.state_control.op("state_table")
+        for index, row in enumerate(states.rows()):
+            if index > 0:
+                scene = (states[index,"container_name"])
+                op(f"/project1/output/{scene}").par.Buttonpressed = False
     
     def HandleFadeOutComplete(self):
         # next_state = self.Me.op("state_table")[self.Me.par.State, "goto"].val
@@ -31,6 +39,8 @@ class StateControlEXT(BaseEXT):
         self.Me.par.State = next_state
         self.Me.par.Sceneop.eval().par.Enterscene.pulse()
         op.fade_control.par.Fadeincomplete = 0
+        if self.Me.par.State == self.HomeScene:
+            self.HandleExperienceComplete()
         pass
     # Below is an example of a parameter callback. Simply create a method that starts with "_on" and then the name of the parameter.
 
