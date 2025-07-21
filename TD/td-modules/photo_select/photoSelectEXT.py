@@ -20,7 +20,7 @@ except ModuleNotFoundError():
 
 class PhotoSelectEXT(PhotoboothSceneEXT):
     def __init__(self, myop: OP) -> None:
-        PhotoboothSceneEXT.__init__(self, myop)
+        PhotoboothSceneEXT.__init__(self, myop,"button_press")
         self.Me.par.opshortcut = 'photo_select'
         self._createPhotoSelectControls()
         self.CurrentButton = 0

@@ -18,7 +18,7 @@ except ModuleNotFoundError():
 
 class QrcodeEXT(PhotoboothSceneEXT):
     def __init__(self, myop: OP) -> None:
-        PhotoboothSceneEXT.__init__(self, myop)
+        PhotoboothSceneEXT.__init__(self, myop,"timeout")
         page = self.GetPage('QRCodeControls')
         pars = [
             ParTemplate("QrCodeSceneLength", par_type="Int", label="QrCodeSceneLength"),

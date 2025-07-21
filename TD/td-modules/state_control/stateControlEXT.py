@@ -60,9 +60,11 @@ class StateControlEXT(BaseEXT):
         pars = [
             ParTemplate('State', par_type='Int', label='State'),
             ParTemplate('ResetPhotoBooth', par_type='Pulse', label='ResetPhotoBooth'),
+            ParTemplate('CaptureMode', par_type='Toggle', label='CaptureMode'),
+            ParTemplate('PhotoBoothActive', par_type='Toggle', label='PhotoBoothActive'),
 
         ]
-
+        
         scene_name = ParTemplate('SceneName', par_type='Str', label='Scene Name')
         scene_name.expr = "op('./state_table')[me.par.State.eval(), 'container_name'].val"
         scene_name.readOnly = True

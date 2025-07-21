@@ -19,7 +19,7 @@ except ModuleNotFoundError():
 
 class AttractVideoSceneEXT(PhotoboothSceneEXT):
     def __init__(self, myop: OP) -> None:
-        PhotoboothSceneEXT.__init__(self, myop)
+        PhotoboothSceneEXT.__init__(self, myop,"video_complete")
         pass
 
     def OnInit(self):

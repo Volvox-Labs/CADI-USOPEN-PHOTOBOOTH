@@ -18,7 +18,7 @@ except ModuleNotFoundError():
 
 class AttractModeEXT(PhotoboothSceneEXT):
     def __init__(self, myop: OP) -> None:
-        PhotoboothSceneEXT.__init__(self, myop)
+        PhotoboothSceneEXT.__init__(self, myop,"button_press")
         pass
 
     def OnInit(self):
