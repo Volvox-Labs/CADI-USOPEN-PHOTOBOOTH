@@ -19,7 +19,7 @@ except ModuleNotFoundError():
 
 class EndingSceneEXT(PhotoboothSceneEXT):
     def __init__(self, myop: OP) -> None:
-        PhotoboothSceneEXT.__init__(self, myop)
+        PhotoboothSceneEXT.__init__(self, myop,"timeout")
         pass
 
     def OnInit(self):

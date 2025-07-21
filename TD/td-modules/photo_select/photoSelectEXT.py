@@ -20,7 +20,7 @@ except ModuleNotFoundError():
 
 class PhotoSelectEXT(PhotoboothSceneEXT):
     def __init__(self, myop: OP) -> None:
-        PhotoboothSceneEXT.__init__(self, myop)
+        PhotoboothSceneEXT.__init__(self, myop,"button_press")
         self.Me.par.opshortcut = 'photo_select'
         self._createPhotoSelectControls()
         self.CurrentButton = 0
@@ -28,6 +28,10 @@ class PhotoSelectEXT(PhotoboothSceneEXT):
             self.Me.op(f"photo_button{i}").par.Clicked = 0
         self.Me.op("photo_button3").par.Clicked = 1
         self.Me.par.Selectedphoto = 3
+        photo_capture_row = op.state_control.op("state_table").findCell("photo_capture_scene").row
+        self.retake_photo_state_id = op.state_control.op("state_table")[photo_capture_row, "state id"].val
+        print(self.retake_photo_state_id)
+        
         pass
 
     def OnInit(self):
@@ -46,8 +50,8 @@ class PhotoSelectEXT(PhotoboothSceneEXT):
         pass
 
     def HandleRetakePhoto(self):
-        op.state_control.par.State = 3
-        # super().HandleButtonPress("attract_mode_scene")
+        op.state_control.par.Nextstate = self.retake_photo_state_id
+        super().HandleButtonPress(self.Me.name)
 
     def HandleImageSelected(self, channel, button_state):
         print(

@@ -16,24 +16,15 @@ except ModuleNotFoundError():
     from ...py_modules.photoboothsceneEXT import PhotoboothSceneEXT #pylint: disable=relative-beyond-top-level
 
 
-
 class LoadingEXT(PhotoboothSceneEXT):
     def __init__(self, myop: OP) -> None:
-        PhotoboothSceneEXT.__init__(self, myop)
-        self.Me.par.opshortcut = "loading_control"
+        PhotoboothSceneEXT.__init__(self, myop,"loading")
         pass
 
     def OnInit(self):
         # return False if initialization fails
         return True
 
-    def _onEnterscene(self):
-        # op.loading_control.op("GFX_loading_Alpha_").par.cue = 0
-        # op.loading_control.op("GFX_loading_Alpha_").par.cuepulse.pulse()
-        super()._onEnterscene()
-
-        
-        
     # Below is an example of a parameter callback. Simply create a method that starts with "_on" and then the name of the parameter.
 
     # def _onExampletoggle(self, par):

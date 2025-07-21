@@ -13,15 +13,17 @@ except ModuleNotFoundError:
 
 
 class PhotoboothSceneEXT(BaseEXT):
-    def __init__(self, myop: OP) -> None:
+    def __init__(self, myop: OP, scene_exit_type: str) -> None:
         BaseEXT.__init__(self, myop, par_callback_on=True)
         self._createControlsPage()
+        self.scene_exit_type = scene_exit_type
         pass
 
     def _onEnterscene(self):
         self.Print('Entering Photobooth Scene')
         op.fade_control.par.Fadein.pulse()
         self.Me.par.Buttonpressed = 0
+        op.state_control.par.Nextstate = op.state_control.op("state_table")[op.state_control.Me.par.State, "goto"].val
         pass
     
     def _onExitscene(self):

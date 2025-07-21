@@ -24,7 +24,8 @@ class StateControlEXT(BaseEXT):
         return True
     
     def HandleFadeOutComplete(self):
-        next_state = self.Me.op("state_table")[self.Me.par.State, "goto"].val
+        # next_state = self.Me.op("state_table")[self.Me.par.State, "goto"].val
+        next_state = self.Me.par.Nextstate.eval()
         next_fade_variation = self.Me.op("state_table")[self.Me.par.State, "fade_variation"].val
         op.fade_control.par.Fadevariation = next_fade_variation
         self.Me.par.State = next_state
@@ -59,7 +60,10 @@ class StateControlEXT(BaseEXT):
         
         pars = [
             ParTemplate('State', par_type='Int', label='State'),
+            ParTemplate('NextState', par_type='Int', label='NextState'),
             ParTemplate('ResetPhotoBooth', par_type='Pulse', label='ResetPhotoBooth'),
+            ParTemplate('CaptureMode', par_type='Toggle', label='CaptureMode'),
+            ParTemplate('PhotoBoothActive', par_type='Toggle', label='PhotoBoothActive'),
 
         ]
 
