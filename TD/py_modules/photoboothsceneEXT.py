@@ -31,12 +31,16 @@ class PhotoboothSceneEXT(BaseEXT):
         op.fade_control.par.Fadeout.pulse()
         pass
     
+    # def _onButtonpress(self):
+    #     print(self.Me.name)
+    #     self.Me.par.Buttonpressed = 1
+    
     def HandleButtonPress(self, current_scene):
-        print(self.Me)
+        print(f"Handling button press for scene: {current_scene}")
         current_scene = self.Me.name
         self.Me.par.Buttonpress.pulse()
         self.Me.par.Buttonpressed = 1
-        print(f"Handling button press for scene: {current_scene}")
+        
         if current_scene == op.state_control.par.Scenename.eval() and op.fade_control.par.Fadeincomplete.eval():
             self.Me.par.Exitscene.pulse()
             

@@ -205,15 +205,16 @@ class ComfyuiControlEXT(BaseEXT):
         op("webclient1").request(f"{self.comfyui_url}/prompt","POST", data=data)
         self.Me.par.Waitforcompletion = True
         op('completion_timer').par.start.pulse()
-        
+        print("Made Request to Comfy, starting pulse to find response")
         pass
         
     def CheckIfWorkflowComplete(self, prompt_id, prompt_data, row_index):
+        print('hi')
         if not prompt_data["status"]:
             print("Prompt ID not found yet")
         else:
             status = prompt_data["status"]
-            #print(status["status_str"])
+            print(status["status_str"])
             
             if status["status_str"] == "success":
                 #print(f"✅ Prompt {prompt_id} finished.")
@@ -255,6 +256,7 @@ class ComfyuiControlEXT(BaseEXT):
         pass
     
     def CheckForCompletion(self) -> None:
+        print("Making request")
         op("webclient1").request(f"{self.comfyui_url}/history","GET")
         pass
 
