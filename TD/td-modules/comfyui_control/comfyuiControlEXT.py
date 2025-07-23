@@ -3,24 +3,24 @@ from vvox_tdtools.base import BaseEXT
 import json
 from vvox_tdtools.parhelper import ParTemplate
 try:
-    # import td
-    from td import OP # type: ignore
-    # TDJ = op.TDModules.mod.TDJSON
-    # TDF = op.TDModules.mod.TDFunctions
+	# import td
+	from td import OP # type: ignore
+	# TDJ = op.TDModules.mod.TDJSON
+	# TDF = op.TDModules.mod.TDFunctions
 except ModuleNotFoundError:
-    from vvox_tdtools.td_mock import OP  #pylint: disable=ungrouped-imports 
-    # from tdconfig import TDJSON as TDJ
-    # from tdconfig import TDFunctions as TDF
+	from vvox_tdtools.td_mock import OP  #pylint: disable=ungrouped-imports 
+	# from tdconfig import TDJSON as TDJ
+	# from tdconfig import TDFunctions as TDF
 
 
 class ComfyuiControlEXT(BaseEXT):
-    def __init__(self, myop: OP) -> None:
-        BaseEXT.__init__(self, myop, par_callback_on=True)
-        self._createControlsPage()
-        self.Me.par.opshortcut = 'comfyui_control'
-        self.in_progress_prompts = op("in_progress_prompts")
-        self.comfyui_url = root.var("comfyui_url")
-        self.prompt_text =  """
+	def __init__(self, myop: OP) -> None:
+		BaseEXT.__init__(self, myop, par_callback_on=True)
+		self._createControlsPage()
+		self.Me.par.opshortcut = 'comfyui_control'
+		self.in_progress_prompts = op("in_progress_prompts")
+		self.comfyui_url = root.var("comfyui_url")
+		self.prompt_text =  """
 	{
 	"10": {
 		"inputs": {
@@ -188,112 +188,113 @@ class ComfyuiControlEXT(BaseEXT):
 	}
 	}
 	"""
-        pass
+		pass
 
-    def OnInit(self):
-        # return False if initialization fails
-        return True
-    
-    def RequestComfy(self):
-        prompt = json.loads(self.prompt_text)
+	def OnInit(self):
+		# return False if initialization fails
+		return True
+	
+	def RequestComfy(self):
+		prompt = json.loads(self.prompt_text)
 	#set the text prompt for our positive CLIPTextEncode
-        sourceFile = str(self.Me.par.Currentcapture.eval())
-        prompt["12"]["inputs"]["image"] = sourceFile
-        print("sourceFile: ", sourceFile)
-        p = {"prompt": prompt}
-        data = json.dumps(p).encode('utf-8')        
-        op("webclient1").request(f"{self.comfyui_url}/prompt","POST", data=data)
-        self.Me.par.Waitforcompletion = True
-        op('completion_timer').par.start.pulse()
-        print("Made Request to Comfy, starting pulse to find response")
-        pass
-        
-    def CheckIfWorkflowComplete(self, prompt_id, prompt_data, row_index):
-        print('hi')
-        if not prompt_data["status"]:
-            print("Prompt ID not found yet")
-        else:
-            status = prompt_data["status"]
-            print(status["status_str"])
-            
-            if status["status_str"] == "success":
-                #print(f"✅ Prompt {prompt_id} finished.")
-                self.Me.par.Waitforcompletion = False
-                print("The Prompt Completed:  " + status["status_str"])  # Return the full prompt result if needed
-                handstat = bool(prompt_data["outputs"]["36"]["text"][0])
-                print("Hand Status: " + str(handstat))
-                # if handstat:
-                #     op.loading_control.op("GFX_loading_Alpha_").par.cue = 0
-                #     op.state_control.par.State = 3
-                # else:
-                #     print("NO HAND")
-                images = prompt_data["outputs"]["90"]["images"]
-                if images:
-                    image_path = images[0]["filename"]
-                    print("file path: " + str(image_path))
-                    op("result").replaceRow(0, str(image_path))
-                    op("in_progress_prompts").deleteRow(row_index)  # Remove the completed prompt from the in_progress_prompts table
-                    if self.in_progress_prompts.numRows == 0:
-                        op("completion_timer").par.initialize.pulse()
-                # op('handstat').replaceRow(0,str(handstat))
-        
-    def HandleResponse(self, data: str) -> None:
-        response = json.loads(data)
-        if "prompt_id" in response:
-            print("Starting workflow with id ", response["prompt_id"])
-            op("in_progress_prompts").appendRow([response["prompt_id"]])
-        else:
-            
-            if self.in_progress_prompts.numRows != 0:
-                current_run_id = op("in_progress_prompts")[0,0].val
-                print( " with prompt_id: ", current_run_id)
-                if current_run_id in response:
-                    print("Found prompt_id in history: ", current_run_id)
-                    self.CheckIfWorkflowComplete(current_run_id, response[current_run_id],0)
-                    
-        # Here you can handle the response data as needed
-        # For example, you might want to parse it and update some parameters or UI elements
-        pass
-    
-    def CheckForCompletion(self) -> None:
-        print("Making request")
-        op("webclient1").request(f"{self.comfyui_url}/history","GET")
-        pass
+		sourceFile = str(self.Me.par.Currentcapture.eval())
+		prompt["12"]["inputs"]["image"] = sourceFile
+		print("sourceFile: ", sourceFile)
+		p = {"prompt": prompt}
+		data = json.dumps(p).encode('utf-8')        
+		op("webclient1").request(f"{self.comfyui_url}/prompt","POST", data=data)
+		self.Me.par.Waitforcompletion = True
+		op('completion_timer').par.start.pulse()
+		print("Made Request to Comfy, starting pulse to find response")
+		pass
+		
+	def CheckIfWorkflowComplete(self, prompt_id, prompt_data, row_index):
+		print('hi')
+		if not prompt_data["status"]:
+			print("Prompt ID not found yet")
+		else:
+			status = prompt_data["status"]
+			print(status["status_str"])
+			
+			if status["status_str"] == "success":
+				#print(f"✅ Prompt {prompt_id} finished.")
+				self.Me.par.Waitforcompletion = False
+				print("The Prompt  Completed:  " + status["status_str"])  # Return the full prompt result if needed
+				handstat = bool(prompt_data["outputs"]["36"]["text"][0])
+				print("Hand Status: " + str(handstat))
+				if self.Me.par.Enablehanddetection.eval():
+					if handstat:
+						op.state_control.par.Nextstate = op.state_control.PhotoCaptureScene
+					else:
+						print("NO HAND")
+				images = prompt_data["outputs"]["90"]["images"]
+				if images:
+					image_path = images[0]["filename"]
+					print("file path: " + str(image_path))
+					op("result").replaceRow(0, str(image_path))
+					op("in_progress_prompts").deleteRow(row_index)  # Remove the completed prompt from the in_progress_prompts table
+					if self.in_progress_prompts.numRows == 0:
+						op("completion_timer").par.initialize.pulse()
+				# op('handstat').replaceRow(0,str(handstat))
+		
+	def HandleResponse(self, data: str) -> None:
+		response = json.loads(data)
+		if "prompt_id" in response:
+			print("Starting workflow with id ", response["prompt_id"])
+			op("in_progress_prompts").appendRow([response["prompt_id"]])
+		else:
+			
+			if self.in_progress_prompts.numRows != 0:
+				current_run_id = op("in_progress_prompts")[0,0].val
+				print( " with prompt_id: ", current_run_id)
+				if current_run_id in response:
+					print("Found prompt_id in history: ", current_run_id)
+					self.CheckIfWorkflowComplete(current_run_id, response[current_run_id],0)
+					
+		# Here you can handle the response data as needed
+		# For example, you might want to parse it and update some parameters or UI elements
+		pass
+	
+	def CheckForCompletion(self) -> None:
+		print("Making request")
+		op("webclient1").request(f"{self.comfyui_url}/history","GET")
+		pass
 
 
-    # Below is an example of a parameter callback. Simply create a method that starts with "_on" and then the name of the parameter.
+	# Below is an example of a parameter callback. Simply create a method that starts with "_on" and then the name of the parameter.
 
-    # def _onExampletoggle(self, par):
-    #     self.Logger.debug(f"_onExampleToggle - val: {par.eval()}")
-    #     pass
+	# def _onExampletoggle(self, par):
+	#     self.Logger.debug(f"_onExampleToggle - val: {par.eval()}")
+	#     pass
 
-    # Below is an example of creating an event loop by overriding the OnFrameStart method.
+	# Below is an example of creating an event loop by overriding the OnFrameStart method.
 
-    # def OnFrameStart(self, frame: int):
-    #     if frame % 60 == 0:
-    #         self.OnEventLoop1()
-    #     return 
+	# def OnFrameStart(self, frame: int):
+	#     if frame % 60 == 0:
+	#         self.OnEventLoop1()
+	#     return 
 
-    # def OnEventLoop1(self):
-    #     self.Print('every second')
-    #     pass
+	# def OnEventLoop1(self):
+	#     self.Print('every second')
+	#     pass
 
-    def _onProcessphoto(self, par):
-        self.Print(f"_onProcessPhoto - val: {par.eval()}")
-        self.RequestComfy()
-        pass
+	def _onProcessphoto(self, par):
+		self.Print(f"_onProcessPhoto - val: {par.eval()}")
+		self.RequestComfy()
+		pass
 
-    def _createControlsPage(self) -> None:
-        page = self.GetPage('Controls')
-        wait_for_completion_toggle = ParTemplate("WaitForCompletion", par_type='Toggle', label='WaitForCompletion')
-        wait_for_completion_toggle.readOnly = True
-        pars = [
-            ParTemplate('ProcessPhoto', par_type='Pulse', label='ProcessPhoto'),
-            ParTemplate("CurrentCapture", par_type='File', label='CurrentCapture'),
-            wait_for_completion_toggle,
-        ]
-        for par in pars:
-            par.createPar(page)
+	def _createControlsPage(self) -> None:
+		page = self.GetPage('Controls')
+		wait_for_completion_toggle = ParTemplate("WaitForCompletion", par_type='Toggle', label='WaitForCompletion')
+		wait_for_completion_toggle.readOnly = True
+		pars = [
+			ParTemplate('ProcessPhoto', par_type='Pulse', label='ProcessPhoto'),
+			ParTemplate("CurrentCapture", par_type='File', label='CurrentCapture'),
+			ParTemplate("EnableHandDetection",par_type="Toggle", label="EnableHandDetection"),
+			wait_for_completion_toggle,
+		]
+		for par in pars:
+			par.createPar(page)
 
-        pass
+		pass
 

@@ -26,8 +26,16 @@ class MosaicPromptEXT(PhotoboothSceneEXT):
         # return False if initialization fails
         return True
     
+    def SendPoster(self):
+        colors = ["blue","red","white","yellow"]
+        selected_poster_index = int(self.Me.par.Selectedphoto.eval()) - 1
+        selected_poster_name = f"poster{selected_poster_index}"
+        print(selected_poster_name)
+    
     def HandleMosaicPromptAnswer(self, val):
         # DO SOMETHING WITH VALUE 
+        colors = ["blue","red","white","yellow"]
+        
         super().HandleButtonPress(self.Me.name)
         pass
 

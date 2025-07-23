@@ -18,6 +18,7 @@ class StateControlEXT(BaseEXT):
         self._createControlsPage()
         self.Me.par.opshortcut = "state_control"
         self.HomeScene = op.state_control.op("state_table").findCell("attract_scene").row
+        self.PhotoCaptureScene = op.state_control.op("state_table").findCell("photo_capture_scene").row
         pass
 
     def OnInit(self):
