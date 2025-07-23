@@ -84,6 +84,7 @@ class StateControlEXT(BaseEXT):
             ParTemplate('ResetPhotoBooth', par_type='Pulse', label='ResetPhotoBooth'),
             ParTemplate('CaptureMode', par_type='Toggle', label='CaptureMode'),
             ParTemplate('PhotoBoothActive', par_type='Toggle', label='PhotoBoothActive'),
+            ParTemplate("DevMode",par_type="Toggle",label="DevMode")
 
         ]
 

@@ -225,6 +225,7 @@ class ComfyuiControlEXT(BaseEXT):
 				if self.Me.par.Enablehanddetection.eval():
 					if handstat:
 						op.state_control.par.Nextstate = op.state_control.PhotoCaptureScene
+						print("GOT A HAND")
 					else:
 						print("NO HAND")
 				images = prompt_data["outputs"]["90"]["images"]
