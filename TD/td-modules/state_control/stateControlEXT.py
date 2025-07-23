@@ -19,11 +19,19 @@ class StateControlEXT(BaseEXT):
         self.Me.par.opshortcut = "state_control"
         self.HomeScene = op.state_control.op("state_table").findCell("attract_scene").row
         self.PhotoCaptureScene = op.state_control.op("state_table").findCell("photo_capture_scene").row
+        self.VideoAttractScene = op.state_control.op("state_table").findCell("attract_video_scene").row
         pass
 
     def OnInit(self):
         # return False if initialization fails
         return True
+    
+    def HandleSceneTimeout(self):
+        print("sene timeout ")
+        print("Setting next state to video attract")
+        self.Me.par.Nextstate = self.VideoAttractScene
+        op.state_control.par.Sceneop.eval().par.Exitscene.pulse()
+        pass
     
     def HandleExperienceComplete(self):
         states = op.state_control.op("state_table")

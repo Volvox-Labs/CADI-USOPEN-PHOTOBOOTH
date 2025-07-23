@@ -23,6 +23,8 @@ class PhotoboothSceneEXT(BaseEXT):
         self.Print('Entering Photobooth Scene')
         op.fade_control.par.Fadein.pulse()
         self.Me.par.Buttonpressed = 0
+        print("I am at state ", op.state_control.Me.par.State)
+        print("going to state ", op.state_control.op("state_table")[op.state_control.Me.par.State, "goto"].val)
         op.state_control.par.Nextstate = op.state_control.op("state_table")[op.state_control.Me.par.State, "goto"].val
         pass
     
@@ -38,6 +40,7 @@ class PhotoboothSceneEXT(BaseEXT):
     def HandleButtonPress(self, current_scene):
         print(f"Handling button press for scene: {current_scene}")
         current_scene = self.Me.name
+        op.state_control.op("idle_timeout").par.initialize.pulse()
         self.Me.par.Buttonpress.pulse()
         self.Me.par.Buttonpressed = 1
         

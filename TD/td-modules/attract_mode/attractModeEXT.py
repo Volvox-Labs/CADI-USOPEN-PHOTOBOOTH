@@ -25,6 +25,11 @@ class AttractModeEXT(PhotoboothSceneEXT):
         # return False if initialization fails
         return True
 
+    def _onEnterscene(self):
+        op.state_control.op("idle_timeout").par.start.pulse()
+        super()._onEnterscene()
+        pass
+
     # Below is an example of a parameter callback. Simply create a method that starts with "_on" and then the name of the parameter.
 
     # def _onExampletoggle(self, par):

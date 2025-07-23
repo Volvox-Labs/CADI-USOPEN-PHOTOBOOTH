@@ -56,8 +56,8 @@ class FadeControlEXT(BaseEXT):
             ParTemplate('FadeIn', par_type='Pulse', label='FadeIn'),
             ParTemplate('FadeOut', par_type='Pulse', label='FadeOut'),
             ParTemplate("FadeInComplete",par_type="Toggle",label="FadeInComplete"),
-            ParTemplate("FadeVariation",par_type="Int",label="FadeVariation")
-            
+            ParTemplate("FadeVariation",par_type="Int",label="FadeVariation"),
+            ParTemplate("EnableTestMode",par_type="Toggle",label="EnableTestMode"),
             
         ]
         for par in pars:
