@@ -26,8 +26,13 @@ class PhotoModeEXT(PhotoboothSceneEXT):
         return True
 
     def HandleZoom(self, zoom_amt):
-        print("zoom", zoom_amt)
-        print(op("constant2").par.const0value)
+        print("zoom", op("constant2").par.const0value)
+        current_zoom = (op("constant2").par.const0value)
+        if zoom_amt == 1 and current_zoom < 2:
+            op("constant2").par.const0value = current_zoom + 1
+        elif zoom_amt == 0 and current_zoom > 0:
+            op("constant2").par.const0value = current_zoom - 1
+        print("zoom", op("constant2").par.const0value)
         pass
     
     def HandleButtonPress(self, button_name: str) -> None:
