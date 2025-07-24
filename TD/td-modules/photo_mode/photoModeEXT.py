@@ -25,7 +25,11 @@ class PhotoModeEXT(PhotoboothSceneEXT):
         # return False if initialization fails
         return True
 
-
+    def HandleZoom(self, zoom_amt):
+        print("zoom", zoom_amt)
+        print(op("constant2").par.const0value)
+        pass
+    
     def HandleButtonPress(self, button_name: str) -> None:
         op.camera_control.par.Capturecamerafeed.pulse()
         super().HandleButtonPress(button_name)
