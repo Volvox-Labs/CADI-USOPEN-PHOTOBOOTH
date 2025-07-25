@@ -34,7 +34,7 @@ class QrcodeEXT(PhotoboothSceneEXT):
 
 
     def _onEnterscene(self):
-        self.Me.op("loading_timer").par.start.pulse()
+        self.Me.op("loading_bar").par.Start.pulse()
         super()._onEnterscene()
         op.fade_control.par.Fadein.pulse()
         

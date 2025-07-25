@@ -10,37 +10,19 @@ except ModuleNotFoundError:
     from vvox_tdtools.td_mock import OP  #pylint: disable=ungrouped-imports 
     # from tdconfig import TDJSON as TDJ
     # from tdconfig import TDFunctions as TDF
-try:
-    from photoboothsceneEXT import PhotoboothSceneEXT  #type: ignore
-except ModuleNotFoundError():
-    from ...py_modules.photoboothsceneEXT import PhotoboothSceneEXT #pylint: disable=relative-beyond-top-level
 
 
-class PhotoModeEXT(PhotoboothSceneEXT):
+class LoadingBarEXT(BaseEXT):
     def __init__(self, myop: OP) -> None:
-        PhotoboothSceneEXT.__init__(self, myop,"button_press")
-        self._createCustomPars()
+        BaseEXT.__init__(self, myop, par_callback_on=True)
+        self._createControlsPage()
+        self.Me.par.x.expr = "(parent.current_scene.width - (me.width )) / 2"
         pass
 
     def OnInit(self):
         # return False if initialization fails
         return True
 
-    def HandleZoom(self, zoom_amt):
-        print("zoom", op("constant2").par.const0value)
-        current_zoom = (op("constant2").par.const0value)
-        if zoom_amt == 1 and current_zoom < 2:
-            op("constant2").par.const0value = current_zoom + 1
-        elif zoom_amt == 0 and current_zoom > 0:
-            op("constant2").par.const0value = current_zoom - 1
-        print("zoom", op("constant2").par.const0value)
-        pass
-    
-    def HandleButtonPress(self, button_name: str) -> None:
-        op.camera_control.par.Capturecamerafeed.pulse()
-        super().HandleButtonPress(button_name)
-        # Implement your button handling logic here
-        pass
     # Below is an example of a parameter callback. Simply create a method that starts with "_on" and then the name of the parameter.
 
     # def _onExampletoggle(self, par):
@@ -58,15 +40,16 @@ class PhotoModeEXT(PhotoboothSceneEXT):
     #     self.Print('every second')
     #     pass
 
-    def _createCustomPars(self) -> None:
-        page = self.GetPage('PhotoSelect')
-        
+
+    def _createControlsPage(self) -> None:
+        page = self.GetPage('Controls')
         pars = [
-            ParTemplate('RetakePhoto', par_type='Toggle', label='RetakePhoto'),
+            ParTemplate('Restart', par_type='Pulse', label='Restart'),
+            ParTemplate("Start", par_type='Pulse', label='Start')
+
         ]
-
-
         for par in pars:
             par.createPar(page)
 
         pass
+
