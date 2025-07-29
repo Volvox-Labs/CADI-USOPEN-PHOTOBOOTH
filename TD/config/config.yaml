@@ -15,6 +15,8 @@ default:
     comfyui_url: ${COMFYUI_URL}
     comfyui_inputs_dir: ${COMFYUI_INPUTS_DIR}
     comfyui_outputs_dir: ${COMFYUI_OUTPUTS_DIR}
+    monitor_index: ${MONITOR_INDEX}
+    blackmagic_camera_index: ${BLACKMAGIC_CAMERA_INDEX}
     headless: False
   ops:
     '/project1/output':
