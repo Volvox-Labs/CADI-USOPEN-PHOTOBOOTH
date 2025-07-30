@@ -5,11 +5,11 @@ import datetime
 
 try:
     # import td
-    from td import OP,op # type: ignore
+    from td import OP, op  # type: ignore
     # TDJ = op.TDModules.mod.TDJSON
     # TDF = op.TDModules.mod.TDFunctions
 except ModuleNotFoundError:
-    from vvox_tdtools.td_mock import OP,op  #pylint: disable=ungrouped-imports 
+    from vvox_tdtools.td_mock import OP, op  # pylint: disable=ungrouped-imports
     # from tdconfig import TDJSON as TDJ
     # from tdconfig import TDFunctions as TDF
 
@@ -26,6 +26,7 @@ class PosterControlEXT(BaseEXT):
         return True
 
     def CreateTakeaway(self):
+        print("Creating takeaway ")
         self.Me.op("intro_timer").par.initialize.pulse()
         self.Me.op("poster_timer").par.initialize.pulse()
         self.Me.op("scale_timer").par.initialize.pulse()
@@ -35,10 +36,17 @@ class PosterControlEXT(BaseEXT):
         # op("camera_capture").par.file = self.Me.par.Outputpath + filename
         self.Me.op("intro_timer").par.start.pulse()
         pass
-    
+
     def _onRecordtakeaway(self):
         self.CreateTakeaway()
-        
+
+    def HandleRecordingComplete(self):
+        print("Recording Complete ")
+        op.loading_control.par.Canfinish = 1
+        op.poster_control.par.Takeawayrecording = 0
+        self.Me.op("intro_timer").par.initialize.pulse()
+    pass
+
     # Below is an example of a parameter callback. Simply create a method that starts with "_on" and then the name of the parameter.
 
     # def _onExampletoggle(self, par):
@@ -50,30 +58,35 @@ class PosterControlEXT(BaseEXT):
     # def OnFrameStart(self, frame: int):
     #     if frame % 60 == 0:
     #         self.OnEventLoop1()
-    #     return 
+    #     return
 
     # def OnEventLoop1(self):
     #     self.Print('every second')
     #     pass
 
-
     def _createControlsPage(self) -> None:
         page = self.GetPage('Controls')
-        takeaway_recording_toggle = ParTemplate("TakeawayRecording", par_type="Toggle", label="TakeawayRecording")
+        takeaway_recording_toggle = ParTemplate(
+            "TakeawayRecording", par_type="Toggle", label="TakeawayRecording")
         takeaway_recording_toggle.readOnly = True
         pars = [
-            ParTemplate("CaptureMosaicPhoto", par_type="Pulse", label="CaptureMosaicPhoto"),
-            ParTemplate('MosaicCapturePath', par_type='Folder', label='MosaicCapturePath'),
+            ParTemplate("CaptureMosaicPhoto", par_type="Pulse",
+                        label="CaptureMosaicPhoto"),
+            ParTemplate('MosaicCapturePath', par_type='Folder',
+                        label='MosaicCapturePath'),
             ParTemplate('CapturePath', par_type='File', label='CapturePath'),
-            ParTemplate('UseTestCapture', par_type='Toggle', label='UseTestCapture'),
-            ParTemplate("TestCaptureOption",par_type="Int", label="TestCaptureOption"),
+            ParTemplate('UseTestCapture', par_type='Toggle',
+                        label='UseTestCapture'),
+            ParTemplate("TestCaptureOption", par_type="Int",
+                        label="TestCaptureOption"),
             ParTemplate("FileName", par_type="Str", label="FileName"),
-            ParTemplate("RecordTakeaway", par_type="Pulse", label="RecordTakeaway"),
-            ParTemplate("TakeawayOutputPath", par_type="Folder", label="TakeawayOutputPath"),
+            ParTemplate("RecordTakeaway", par_type="Pulse",
+                        label="RecordTakeaway"),
+            ParTemplate("TakeawayOutputPath", par_type="Folder",
+                        label="TakeawayOutputPath"),
             takeaway_recording_toggle,
         ]
         for par in pars:
             par.createPar(page)
 
         pass
-

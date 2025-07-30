@@ -1,6 +1,6 @@
 # pylint: disable=missing-docstring,logging-fstring-interpolation
 from vvox_tdtools.base import BaseEXT
-# from vvox_tdtools.parhelper import ParTemplate
+from vvox_tdtools.parhelper import ParTemplate
 try:
     # import td
     from td import OP # type: ignore
@@ -19,6 +19,7 @@ except ModuleNotFoundError():
 class LoadingEXT(PhotoboothSceneEXT):
     def __init__(self, myop: OP) -> None:
         PhotoboothSceneEXT.__init__(self, myop,"loading")
+        self._createLoadingControls()
         pass
 
     def OnInit(self):
@@ -42,3 +43,13 @@ class LoadingEXT(PhotoboothSceneEXT):
     #     self.Print('every second')
     #     pass
 
+    def _createLoadingControls(self) -> None:
+        page = self.GetPage('LoadingControls')
+        pars = [
+            ParTemplate('CanFinish', par_type='Toggle', label='CanFinish'),
+
+        ]
+        for par in pars:
+            par.createPar(page)
+
+        pass

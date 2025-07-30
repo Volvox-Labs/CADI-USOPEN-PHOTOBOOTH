@@ -4,11 +4,11 @@ import json
 from vvox_tdtools.parhelper import ParTemplate
 try:
 	# import td
-	from td import OP # type: ignore
+	from td import OP,op # type: ignore
 	# TDJ = op.TDModules.mod.TDJSON
 	# TDF = op.TDModules.mod.TDFunctions
 except ModuleNotFoundError:
-	from vvox_tdtools.td_mock import OP  #pylint: disable=ungrouped-imports 
+	from vvox_tdtools.td_mock import OP,op  #pylint: disable=ungrouped-imports 
 	# from tdconfig import TDJSON as TDJ
 	# from tdconfig import TDFunctions as TDF
 
@@ -18,7 +18,7 @@ class ComfyuiControlEXT(BaseEXT):
 		BaseEXT.__init__(self, myop, par_callback_on=True)
 		self._createControlsPage()
 		self.Me.par.opshortcut = 'comfyui_control'
-		self.in_progress_prompts = op("in_progress_prompts")
+		self.in_progress_prompts = self.Me.op("in_progress_prompts")
 		self.comfyui_url = root.var("comfyui_url")
 		self.prompt_text =  """
 	{
@@ -195,6 +195,8 @@ class ComfyuiControlEXT(BaseEXT):
 		return True
 	
 	def RequestComfy(self):
+ 
+		print("requesting comfy ui")
 		prompt = json.loads(self.prompt_text)
 	#set the text prompt for our positive CLIPTextEncode
 		sourceFile = str(self.Me.par.Currentcapture.eval())
@@ -202,14 +204,13 @@ class ComfyuiControlEXT(BaseEXT):
 		print("sourceFile: ", sourceFile)
 		p = {"prompt": prompt}
 		data = json.dumps(p).encode('utf-8')        
-		op("webclient1").request(f"{self.comfyui_url}/prompt","POST", data=data)
+		self.Me.op("webclient1").request(f"{self.comfyui_url}/prompt","POST", data=data)
 		self.Me.par.Waitforcompletion = True
-		op('completion_timer').par.start.pulse()
+		self.Me.op('completion_timer').par.start.pulse()
 		print("Made Request to Comfy, starting pulse to find response")
 		pass
 		
 	def CheckIfWorkflowComplete(self, prompt_id, prompt_data, row_index):
-		print('hi')
 		if not prompt_data["status"]:
 			print("Prompt ID not found yet")
 		else:
@@ -218,6 +219,7 @@ class ComfyuiControlEXT(BaseEXT):
 			
 			if status["status_str"] == "success":
 				#print(f"✅ Prompt {prompt_id} finished.")
+				op.poster_control.CreateTakeaway()
 				self.Me.par.Waitforcompletion = False
 				print("The Prompt  Completed:  " + status["status_str"])  # Return the full prompt result if needed
 				handstat = bool(prompt_data["outputs"]["36"]["text"][0])

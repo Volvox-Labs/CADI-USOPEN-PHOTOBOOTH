@@ -45,7 +45,10 @@ class LoadingBarEXT(BaseEXT):
         page = self.GetPage('Controls')
         pars = [
             ParTemplate('Restart', par_type='Pulse', label='Restart'),
-            ParTemplate("Start", par_type='Pulse', label='Start')
+            ParTemplate("Start", par_type='Pulse', label='Start'),
+            ParTemplate("SlowSpeed",par_type="Float", label="SlowSpeed"),
+            ParTemplate("FastSpeed", par_type="Float", label="FastSpeed"),
+            ParTemplate('CanFinish', par_type='Toggle', label='CanFinish'),
 
         ]
         for par in pars:
