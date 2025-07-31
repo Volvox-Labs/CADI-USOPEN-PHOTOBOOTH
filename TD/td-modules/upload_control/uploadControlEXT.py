@@ -36,7 +36,17 @@ class UploadControlEXT(BaseEXT):
         pass
     
     def HandleReceiveText(self, client, text):
-        print("Received text from client: ", text)
+        print("Received text from clien t: ", text)
+        if text:
+            response = json.loads(text)
+            if "qr_code_path" not in response:
+                return
+            qr_code_path = response["qr_code_path"]
+            if qr_code_path:
+                op.qrcode_scene.op("qrcode_file").par.file = qr_code_path
+                print(f"QR code path for {client}: {qr_code_path}")
+            else:
+                print(f"No QR code path found in response from {client}")
         
     def HandleDisconnect(self, client):
         print("Client disconnected: ", client)

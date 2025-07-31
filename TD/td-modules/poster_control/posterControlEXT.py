@@ -82,7 +82,7 @@ class PosterControlEXT(BaseEXT):
             ParTemplate("FileName", par_type="Str", label="FileName"),
             ParTemplate("RecordTakeaway", par_type="Pulse",
                         label="RecordTakeaway"),
-            ParTemplate("TakeawayOutputPath", par_type="Folder",
+            ParTemplate("TakeawayOutputPath", par_type="Str",
                         label="TakeawayOutputPath"),
             takeaway_recording_toggle,
         ]

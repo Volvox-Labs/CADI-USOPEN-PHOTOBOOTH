@@ -17,6 +17,7 @@ default:
     comfyui_outputs_dir: ${COMFYUI_OUTPUTS_DIR}
     monitor_index: ${MONITOR_INDEX}
     blackmagic_camera_index: ${BLACKMAGIC_CAMERA_INDEX}
+    takeaway_render_dir: ${TAKEAWAYS_RENDER_DIR}
     headless: False
   ops:
     '/project1/output':
