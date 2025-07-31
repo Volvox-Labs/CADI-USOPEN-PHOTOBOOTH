@@ -23,8 +23,6 @@ class PhotoboothSceneEXT(BaseEXT):
         self.Print('Entering Photobooth Scene')
         op.fade_control.par.Fadein.pulse()
         self.Me.par.Buttonpressed = 0
-        print("I am at state ", op.state_control.Me.par.State)
-        print("going to state ", op.state_control.op("state_table")[op.state_control.Me.par.State, "goto"].val)
         op.state_control.par.Nextstate = op.state_control.op("state_table")[op.state_control.Me.par.State, "goto"].val
         pass
     
@@ -50,7 +48,6 @@ class PhotoboothSceneEXT(BaseEXT):
         pass
 
     def HandleLoadingComplete(self, current_scene: str) -> None:
-        print("here")
         if current_scene == op.state_control.par.Scenename.eval():
             self.Me.par.Exitscene.pulse()
         pass

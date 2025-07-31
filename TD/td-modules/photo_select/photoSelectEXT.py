@@ -30,7 +30,6 @@ class PhotoSelectEXT(PhotoboothSceneEXT):
         self.Me.par.Selectedphoto = 3
         photo_capture_row = op.state_control.op("state_table").findCell("photo_capture_scene").row
         self.retake_photo_state_id = op.state_control.op("state_table")[photo_capture_row, "state id"].val
-        print(self.retake_photo_state_id)
         
         pass
 
@@ -42,7 +41,6 @@ class PhotoSelectEXT(PhotoboothSceneEXT):
         colors = ["blue","red","white","yellow"]
         selected_poster_index = int(self.Me.par.Selectedphoto.eval()) - 1
         selected_poster_name = f"poster{colors[selected_poster_index]}"
-        print(selected_poster_name)
         op.poster_control.op("selectposter").par.top = selected_poster_name
         op.upload_control.par.Uploadvideo.pulse()
         pass

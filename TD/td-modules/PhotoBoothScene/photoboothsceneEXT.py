@@ -16,7 +16,6 @@ class PhotoboothSceneEXT(BaseEXT):
     def __init__(self, myop: OP) -> None:
         BaseEXT.__init__(self, myop, par_callback_on=True)
         self._createControlsPage()
-        print("in parent")
         pass
 
     def EnterScene(self):

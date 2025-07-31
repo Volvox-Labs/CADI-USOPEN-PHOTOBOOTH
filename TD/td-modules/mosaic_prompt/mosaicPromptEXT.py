@@ -30,7 +30,7 @@ class MosaicPromptEXT(PhotoboothSceneEXT):
         colors = ["blue","red","white","yellow"]
         selected_poster_index = int(self.Me.par.Selectedphoto.eval()) - 1
         selected_poster_name = f"poster{selected_poster_index}"
-        print(selected_poster_name)
+        pass
     
     def HandleMosaicPromptAnswer(self, val):
         # DO SOMETHING WITH VALUE 

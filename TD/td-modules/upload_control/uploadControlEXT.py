@@ -37,7 +37,7 @@ class UploadControlEXT(BaseEXT):
     
     def HandleReceiveText(self, client, text):
         print("Received text from clien t: ", text)
-        if text:
+        if text and text !="null":
             response = json.loads(text)
             if "qr_code_path" not in response:
                 return
