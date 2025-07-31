@@ -54,9 +54,14 @@ class UploadControlEXT(BaseEXT):
         if self.ws_client == client:
             self.ws_client = ""
         pass
-        
+    
+    def GetTakeawayFileName(self):
+        colors = ["blue","red","white","yellow"]
+        selected_poster_index = int(op.photo_select.par.Selectedphoto.eval()) - 1
+        return op.poster_control.par.Takeawayoutputpath + colors[selected_poster_index] + "_" + op.poster_control.par.Filename
+
     def _onUploadvideo(self):
-        movie = op.poster_control.op("selected_video")[0,0].val
+        movie = self.GetTakeawayFileName()
         print("uploading movie: ", movie)
         msg = {"file_name": movie}
         op.upload_control.op("webserver1").webSocketSendText(self.ws_client,json.dumps(msg))
