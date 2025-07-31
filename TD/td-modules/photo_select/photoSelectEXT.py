@@ -37,7 +37,7 @@ class PhotoSelectEXT(PhotoboothSceneEXT):
         # return False if initialization fails
         return True
     
-    def SendPoster(self):
+    def PrepAndTriggerTakeaway(self):
         colors = ["blue","red","white","yellow"]
         selected_poster_index = int(self.Me.par.Selectedphoto.eval()) - 1
         selected_poster_name = f"poster{colors[selected_poster_index]}"
@@ -48,14 +48,11 @@ class PhotoSelectEXT(PhotoboothSceneEXT):
     
     
     def HandleButtonPress(self, current_scene):
-        # DO SOMETHING HERE WITH THE IMAGE
-        timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
-        filename = f"/mosaic_{timestamp}.png"
+        # timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
+        # filename = f"/mosaic_{timestamp}.png"
         mosaic_photo_index = self.Me.op(f"photo_button{self.Me.par.Selectedphoto.eval()}").par.Index.eval()
         op.poster_control.par.Coloroption = (mosaic_photo_index)
-        op.poster_control.op("mosaic_capture").par.file = op.poster_control.par.Mosaiccapturepath + filename
-        op.poster_control.par.Capturemosaicphoto.pulse()
-        self.SendPoster()
+        self.PrepAndTriggerTakeaway()
         super().HandleButtonPress(current_scene)
         pass
 

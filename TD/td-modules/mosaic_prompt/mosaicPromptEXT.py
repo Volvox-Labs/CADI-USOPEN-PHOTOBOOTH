@@ -1,13 +1,14 @@
 # pylint: disable=missing-docstring,logging-fstring-interpolation
 from vvox_tdtools.base import BaseEXT
 # from vvox_tdtools.parhelper import ParTemplate
+import datetime
 try:
     # import td
-    from td import OP # type: ignore
+    from td import OP,op # type: ignore
     # TDJ = op.TDModules.mod.TDJSON
     # TDF = op.TDModules.mod.TDFunctions
 except ModuleNotFoundError:
-    from vvox_tdtools.td_mock import OP  #pylint: disable=ungrouped-imports 
+    from vvox_tdtools.td_mock import OP,op  #pylint: disable=ungrouped-imports 
     # from tdconfig import TDJSON as TDJ
     # from tdconfig import TDFunctions as TDF
 try:
@@ -26,16 +27,17 @@ class MosaicPromptEXT(PhotoboothSceneEXT):
         # return False if initialization fails
         return True
     
-    def SendPoster(self):
-        colors = ["blue","red","white","yellow"]
-        selected_poster_index = int(self.Me.par.Selectedphoto.eval()) - 1
-        selected_poster_name = f"poster{selected_poster_index}"
-        pass
     
     def HandleMosaicPromptAnswer(self, val):
-        # DO SOMETHING WITH VALUE 
-        colors = ["blue","red","white","yellow"]
-        
+        print(f"User answered mosaic prompt with value: {val}")
+        if val == 1:
+            print("User answered yes to mosaic prompt")
+            mosaic_photo_index = op.photo_select.op(f"photo_button{op.photo_select.par.Selectedphoto.eval()}").par.Index.eval()
+            op.poster_control.par.Coloroption = (mosaic_photo_index)
+            timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
+            filename = f"/mosaic_{timestamp}.png"
+            op.poster_control.op("mosaic_capture").par.file = op.poster_control.par.Mosaiccapturepath + filename
+            op.poster_control.par.Capturemosaicphoto.pulse()
         super().HandleButtonPress(self.Me.name)
         pass
 
