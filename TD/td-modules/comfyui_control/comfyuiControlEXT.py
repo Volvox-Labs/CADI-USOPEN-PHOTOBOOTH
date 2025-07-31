@@ -20,6 +20,8 @@ class ComfyuiControlEXT(BaseEXT):
 		self.Me.par.opshortcut = 'comfyui_control'
 		self.in_progress_prompts = self.Me.op("in_progress_prompts")
 		self.comfyui_url = root.var("comfyui_url")
+		photo_capture_row = op.state_control.op("state_table").findCell("photo_capture_scene").row
+		self.retake_photo_state_id = op.state_control.op("state_table")[photo_capture_row, "state id"].val
 		self.prompt_text =  """
 	{
 	"10": {
@@ -194,8 +196,8 @@ class ComfyuiControlEXT(BaseEXT):
 		# return False if initialization fails
 		return True
 	
-	def RequestComfy(self):
- 
+
+	def MakeRequest(self):
 		print("requesting comfy ui")
 		prompt = json.loads(self.prompt_text)
 	#set the text prompt for our positive CLIPTextEncode
@@ -205,7 +207,13 @@ class ComfyuiControlEXT(BaseEXT):
 		p = {"prompt": prompt}
 		data = json.dumps(p).encode('utf-8')        
 		self.Me.op("webclient1").request(f"{self.comfyui_url}/prompt","POST", data=data)
+		print("Request Sent ")
+		pass
+
+	def RequestComfy(self):
+		self.MakeRequest()
 		self.Me.par.Waitforcompletion = True
+		self.Me.par.Gotpromptid = False
 		self.Me.op('completion_timer').par.start.pulse()
 		print("Made Request to Comfy, starting pulse to find response")
 		pass
@@ -214,9 +222,10 @@ class ComfyuiControlEXT(BaseEXT):
 		if not prompt_data["status"]:
 			print("Prompt ID not found yet")
 		else:
+			# print(prompt_data)
 			status = prompt_data["status"]
 			print(status["status_str"])
-			
+			current_id = (prompt_data["status"]["messages"][2][1]["prompt_id"])
 			if status["status_str"] == "success":
 				#print(f"✅ Prompt {prompt_id} finished.")
 				op.poster_control.CreateTakeaway()
@@ -224,12 +233,12 @@ class ComfyuiControlEXT(BaseEXT):
 				print("The Prompt  Completed:  " + status["status_str"])  # Return the full prompt result if needed
 				handstat = bool(prompt_data["outputs"]["36"]["text"][0])
 				print("Hand Status: " + str(handstat))
-				if self.Me.par.Enablehanddetection.eval():
-					if handstat:
-						op.state_control.par.Nextstate = op.state_control.PhotoCaptureScene
-						print("GOT A HAND")
-					else:
-						print("NO HAND")
+				# if self.Me.par.Enablehanddetection.eval():
+				# 	if handstat:
+				# 		op.state_control.par.Nextstate = op.state_control.PhotoCaptureScene
+				# 		print("GOT A HAND")
+				# 	else:
+				# 		print("NO HAND")
 				images = prompt_data["outputs"]["90"]["images"]
 				if images:
 					image_path = images[0]["filename"]
@@ -242,18 +251,18 @@ class ComfyuiControlEXT(BaseEXT):
 		
 	def HandleResponse(self, data: str) -> None:
 		response = json.loads(data)
-		if "prompt_id" in response:
-			print("Starting workflow with id ", response["prompt_id"])
-			op("in_progress_prompts").appendRow([response["prompt_id"]])
+		print(len(response))
+		if "prompt_id" in response and len(response) == 3:
+			print("Got prompt id: ", response["prompt_id"])
+			self.Me.par.Gotpromptid = True
+			self.Me.par.Currentcomfyid = response["prompt_id"]
+		elif self.Me.par.Gotpromptid and op.comfyui_control.par.Currentcomfyid.eval() in response:
+			print("Checking if workflow complete for  ", op.comfyui_control.par.Currentcomfyid.eval())
+			self.CheckIfWorkflowComplete(op.comfyui_control.par.Currentcomfyid.eval(), response[op.comfyui_control.par.Currentcomfyid.eval()],0)
 		else:
-			
-			if self.in_progress_prompts.numRows != 0:
-				current_run_id = op("in_progress_prompts")[0,0].val
-				print( " with prompt_id: ", current_run_id)
-				if current_run_id in response:
-					print("Found prompt_id in history: ", current_run_id)
-					self.CheckIfWorkflowComplete(current_run_id, response[current_run_id],0)
-					
+			# print(response)
+			print("No id in response ")
+			pass
 		# Here you can handle the response data as needed
 		# For example, you might want to parse it and update some parameters or UI elements
 		pass
@@ -261,6 +270,14 @@ class ComfyuiControlEXT(BaseEXT):
 	def CheckForCompletion(self) -> None:
 		print("Making request")
 		op("webclient1").request(f"{self.comfyui_url}/history","GET")
+		pass
+
+	def HandleNoResponse(self):
+		print("No Response from ComfyUI")
+		self.Me.par.Waitforcompletion = False
+		op.state_control.par.Nextstate = self.retake_photo_state_id
+		op.photo_capture.op("error_timer").par.start.pulse()
+		self.Me.par.Gotpromptid = False
 		pass
 
 
@@ -290,11 +307,15 @@ class ComfyuiControlEXT(BaseEXT):
 		page = self.GetPage('Controls')
 		wait_for_completion_toggle = ParTemplate("WaitForCompletion", par_type='Toggle', label='WaitForCompletion')
 		wait_for_completion_toggle.readOnly = True
+		got_prompt_id = ParTemplate("GotPromptID", par_type='Toggle', label='GotPromptID')
+		got_prompt_id.readOnly = True
 		pars = [
 			ParTemplate('ProcessPhoto', par_type='Pulse', label='ProcessPhoto'),
 			ParTemplate("CurrentCapture", par_type='File', label='CurrentCapture'),
 			ParTemplate("EnableHandDetection",par_type="Toggle", label="EnableHandDetection"),
+			ParTemplate("CurrentComfyID", par_type="Str", label="CurrentComfyID"),
 			wait_for_completion_toggle,
+			got_prompt_id
 		]
 		for par in pars:
 			par.createPar(page)

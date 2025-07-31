@@ -30,15 +30,16 @@ class MosaicPromptEXT(PhotoboothSceneEXT):
     
     def HandleMosaicPromptAnswer(self, val):
         print(f"User answered mosaic prompt with value: {val}")
-        if val == 1:
-            print("User answered yes to mosaic prompt")
-            mosaic_photo_index = op.photo_select.op(f"photo_button{op.photo_select.par.Selectedphoto.eval()}").par.Index.eval()
-            op.poster_control.par.Coloroption = (mosaic_photo_index)
-            timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
-            filename = f"/mosaic_{timestamp}.png"
-            op.poster_control.op("mosaic_capture").par.file = op.poster_control.par.Mosaiccapturepath + filename
-            op.poster_control.par.Capturemosaicphoto.pulse()
-        super().HandleButtonPress(self.Me.name)
+        if not self.Me.par.Buttonpressed:
+            if val == 1:
+                print("User answered yes to mosaic prompt")
+                mosaic_photo_index = op.photo_select.op(f"photo_button{op.photo_select.par.Selectedphoto.eval()}").par.Index.eval()
+                op.poster_control.par.Coloroption = (mosaic_photo_index)
+                timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
+                filename = f"/mosaic_{timestamp}.png"
+                op.poster_control.op("mosaic_capture").par.file = op.poster_control.par.Mosaiccapturepath + filename
+                op.poster_control.par.Capturemosaicphoto.pulse()
+            super().HandleButtonPress(self.Me.name)
         pass
 
     # Below is an example of a parameter callback. Simply create a method that starts with "_on" and then the name of the parameter.

@@ -33,8 +33,9 @@ class AttractVideoSceneEXT(PhotoboothSceneEXT):
         pass
         
     def HandleButtonPress(self, current_scene):
-        self.Me.op("intro_video").par.play = 0
-        super().HandleButtonPress(current_scene)
+        if not self.Me.par.Buttonpressed: 
+            self.Me.op("intro_video").par.play = 0
+            super().HandleButtonPress(current_scene)
         pass
 
     def HandleVideoComplete(self):

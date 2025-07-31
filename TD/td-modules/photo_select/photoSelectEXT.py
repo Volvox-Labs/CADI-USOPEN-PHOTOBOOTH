@@ -50,15 +50,18 @@ class PhotoSelectEXT(PhotoboothSceneEXT):
     def HandleButtonPress(self, current_scene):
         # timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
         # filename = f"/mosaic_{timestamp}.png"
-        mosaic_photo_index = self.Me.op(f"photo_button{self.Me.par.Selectedphoto.eval()}").par.Index.eval()
-        op.poster_control.par.Coloroption = (mosaic_photo_index)
-        self.PrepAndTriggerTakeaway()
-        super().HandleButtonPress(current_scene)
+        if not self.Me.par.Buttonpressed:
+            mosaic_photo_index = self.Me.op(f"photo_button{self.Me.par.Selectedphoto.eval()}").par.Index.eval()
+            op.poster_control.par.Coloroption = (mosaic_photo_index)
+            self.PrepAndTriggerTakeaway()
+            super().HandleButtonPress(current_scene)
         pass
 
     def HandleRetakePhoto(self):
-        op.state_control.par.Nextstate = self.retake_photo_state_id
-        super().HandleButtonPress(self.Me.name)
+        if not self.Me.par.Buttonpressed:
+            op.state_control.par.Nextstate = self.retake_photo_state_id
+            self.Me.par.Buttonpressed = 0
+            super().HandleButtonPress(self.Me.name)
 
     def HandleImageSelected(self, channel, button_state):
         print(
