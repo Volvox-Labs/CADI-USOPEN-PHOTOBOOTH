@@ -44,7 +44,7 @@ class PhotoSelectEXT(PhotoboothSceneEXT):
         selected_poster_name = f"poster{colors[selected_poster_index]}"
         print(selected_poster_name)
         op.poster_control.op("selectposter").par.top = selected_poster_name
-    
+        op.upload_control.par.Uploadvideo.pulse()
         pass
     
     

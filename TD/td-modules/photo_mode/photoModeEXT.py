@@ -38,6 +38,7 @@ class PhotoModeEXT(PhotoboothSceneEXT):
     
     def HandleButtonPress(self, button_name: str) -> None:
         op.camera_control.par.Capturecamerafeed.pulse()
+        op.loading_control.par.Canfinish = 0
         super().HandleButtonPress(button_name)
         # Implement your button handling logic here
         pass
