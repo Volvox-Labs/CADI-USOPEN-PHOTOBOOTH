@@ -35,6 +35,8 @@ class StateControlEXT(BaseEXT):
     
     def HandleExperienceComplete(self):
         states = op.state_control.op("state_table")
+        op.upload_control.par.Status = "inactive"
+        op.qrcode_scene.par.Showqrcode = 0
         for index, row in enumerate(states.rows()):
             if index > 0:
                 scene = (states[index,"container_name"])

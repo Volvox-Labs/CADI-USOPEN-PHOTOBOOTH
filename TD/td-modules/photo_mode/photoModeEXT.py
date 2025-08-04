@@ -34,6 +34,8 @@ class PhotoModeEXT(PhotoboothSceneEXT):
 
     def HandleZoom(self, zoom_amt):
         print("zoom", op("constant2").par.const0value)
+        if self.Me.par.Buttonpressed:
+            return
         current_zoom = (op("constant2").par.const0value)
         if zoom_amt == 1 and current_zoom < 2:
             op("constant2").par.const0value = current_zoom + 1

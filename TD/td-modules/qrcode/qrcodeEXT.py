@@ -3,11 +3,11 @@ from vvox_tdtools.base import BaseEXT
 from vvox_tdtools.parhelper import ParTemplate
 try:
     # import td
-    from td import OP # type: ignore
+    from td import OP,op # type: ignore
     # TDJ = op.TDModules.mod.TDJSON
     # TDF = op.TDModules.mod.TDFunctions
 except ModuleNotFoundError:
-    from vvox_tdtools.td_mock import OP  #pylint: disable=ungrouped-imports 
+    from vvox_tdtools.td_mock import OP,op  #pylint: disable=ungrouped-imports 
     # from tdconfig import TDJSON as TDJ
     # from tdconfig import TDFunctions as TDF
 try:
@@ -22,6 +22,7 @@ class QrcodeEXT(PhotoboothSceneEXT):
         page = self.GetPage('QRCodeControls')
         pars = [
             ParTemplate("QrCodeSceneLength", par_type="Int", label="QrCodeSceneLength"),
+            ParTemplate("ShowQRCode", par_type="Toggle", label="ShowQRCode")
 
         ]
         for par in pars:
@@ -31,12 +32,25 @@ class QrcodeEXT(PhotoboothSceneEXT):
     def OnInit(self):
         # return False if initialization fails
         return True
+    
+    def _onShowqrcode(self,par):
+        if par:
+            self.Me.op("loading_bar").par.Start.pulse()
 
+    def HandleQRCodeReady(self):
+        self.Me.op("loading_bar").par.Start.pulse()
+        pass
 
     def _onEnterscene(self):
-        self.Me.op("loading_bar").par.Start.pulse()
-        super()._onEnterscene()
+        self.Me.op("loading_bar").par.Initialize.pulse()
+        if op.upload_control.par.Status.eval() == "complete":
+            self.Me.par.Showqrcode = 1
+        else:
+            print("Upload not complete, skipping loading bar pulse.")
+        
         op.fade_control.par.Fadein.pulse()
+        super()._onEnterscene()
+        
         
         pass
     # Below is an example of a parameter callback. Simply create a method that starts with "_on" and then the name of the parameter.
