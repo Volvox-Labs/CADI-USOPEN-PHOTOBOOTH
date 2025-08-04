@@ -38,7 +38,7 @@ class MosaicPromptEXT(PhotoboothSceneEXT):
                 timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
                 filename = f"/mosaic_{timestamp}.png"
                 op.poster_control.op("mosaic_capture").par.file = op.poster_control.par.Mosaiccapturepath + filename
-                op.poster_control.par.Capturemosaicphoto.pulse()
+                op.poster_control.op("mosaic_capture").par.addframe.pulse()
             super().HandleButtonPress(self.Me.name)
         pass
 

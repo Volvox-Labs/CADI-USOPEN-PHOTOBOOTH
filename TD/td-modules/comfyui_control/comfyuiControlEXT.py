@@ -231,19 +231,22 @@ class ComfyuiControlEXT(BaseEXT):
 				op.poster_control.CreateTakeaway()
 				self.Me.par.Waitforcompletion = False
 				print("The Prompt  Completed:  " + status["status_str"])  # Return the full prompt result if needed
-				handstat = bool(prompt_data["outputs"]["36"]["text"][0])
-				print("Hand Status: " + str(handstat))
+				handstat = (prompt_data["outputs"]["36"]["text"][0])
+				print(type(handstat))
+				print("Hand Status: " + handstat)
+
 				# if self.Me.par.Enablehanddetection.eval():
-				# 	if handstat:
-				# 		op.state_control.par.Nextstate = op.state_control.PhotoCaptureScene
-				# 		print("GOT A HAND")
-				# 	else:
-				# 		print("NO HAND")
+				if handstat == "True":
+					print("GOT A HAND")
+					self.HandleFailedResponse()
+				else:
+					print("NO HAND")
 				images = prompt_data["outputs"]["90"]["images"]
 				if images:
 					image_path = images[0]["filename"]
 					print("file path: " + str(image_path))
 					op("result").replaceRow(0, str(image_path))
+					# TODO this doesn't need to be a table 
 					op("in_progress_prompts").deleteRow(row_index)  # Remove the completed prompt from the in_progress_prompts table
 					if self.in_progress_prompts.numRows == 0:
 						op("completion_timer").par.initialize.pulse()
@@ -251,7 +254,6 @@ class ComfyuiControlEXT(BaseEXT):
 		
 	def HandleResponse(self, data: str) -> None:
 		response = json.loads(data)
-		print(len(response))
 		if "prompt_id" in response and len(response) == 3:
 			print("Got prompt id: ", response["prompt_id"])
 			self.Me.par.Gotpromptid = True
@@ -260,8 +262,6 @@ class ComfyuiControlEXT(BaseEXT):
 			print("Checking if workflow complete for  ", op.comfyui_control.par.Currentcomfyid.eval())
 			self.CheckIfWorkflowComplete(op.comfyui_control.par.Currentcomfyid.eval(), response[op.comfyui_control.par.Currentcomfyid.eval()],0)
 		else:
-			# print(response)
-			print("No id in response ")
 			pass
 		# Here you can handle the response data as needed
 		# For example, you might want to parse it and update some parameters or UI elements
@@ -272,31 +272,21 @@ class ComfyuiControlEXT(BaseEXT):
 		op("webclient1").request(f"{self.comfyui_url}/history","GET")
 		pass
 
-	def HandleNoResponse(self):
-		print("No Response from ComfyUI")
+	def HandleFailedResponse(self):
+		print("Failed to get response from ComfyUI")
 		self.Me.par.Waitforcompletion = False
 		op.state_control.par.Nextstate = self.retake_photo_state_id
-		op.photo_capture.op("error_timer").par.start.pulse()
+		op.photo_capture.par.Showerrormessage = 1
 		self.Me.par.Gotpromptid = False
+		op("completion_timer").par.initialize.pulse()
+		op.loading_control.par.Canfinish = 1
 		pass
 
+	def HandleNoResponse(self):
+		print("No Response from ComfyUI")
+		self.HandleFailedResponse()
+		pass
 
-	# Below is an example of a parameter callback. Simply create a method that starts with "_on" and then the name of the parameter.
-
-	# def _onExampletoggle(self, par):
-	#     self.Logger.debug(f"_onExampleToggle - val: {par.eval()}")
-	#     pass
-
-	# Below is an example of creating an event loop by overriding the OnFrameStart method.
-
-	# def OnFrameStart(self, frame: int):
-	#     if frame % 60 == 0:
-	#         self.OnEventLoop1()
-	#     return 
-
-	# def OnEventLoop1(self):
-	#     self.Print('every second')
-	#     pass
 
 	def _onProcessphoto(self, par):
 		self.Print(f"_onProcessPhoto - val: {par.eval()}")
