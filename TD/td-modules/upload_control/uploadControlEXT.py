@@ -45,6 +45,9 @@ class UploadControlEXT(BaseEXT):
             if qr_code_path:
                 op.qrcode_scene.op("qrcode_file").par.file = qr_code_path
                 print(f"QR code path for {client}: {qr_code_path}")
+                op.upload_control.par.Status = "complete"
+                if op.state_control.par.Scenename.eval() == "qrcode_scene":
+                    op.qrcode_scene.par.Showqrcode = 1
             else:
                 print(f"No QR code path found in response from {client}")
         
@@ -65,6 +68,7 @@ class UploadControlEXT(BaseEXT):
         print("uploading movie: ", movie)
         msg = {"file_name": movie}
         op.upload_control.op("webserver1").webSocketSendText(self.ws_client,json.dumps(msg))
+        op.upload_control.par.Status = "processing"
         print("sent upload ")
         pass
     # Below is an example of a parameter callback. Simply create a method that starts with "_on" and then the name of the parameter.

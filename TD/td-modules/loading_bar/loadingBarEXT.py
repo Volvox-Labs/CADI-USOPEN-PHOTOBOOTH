@@ -46,6 +46,7 @@ class LoadingBarEXT(BaseEXT):
         pars = [
             ParTemplate('Restart', par_type='Pulse', label='Restart'),
             ParTemplate("Start", par_type='Pulse', label='Start'),
+            ParTemplate("Initialize", par_type='Pulse', label='Initialize'),
             ParTemplate("SlowSpeed",par_type="Float", label="SlowSpeed"),
             ParTemplate("FastSpeed", par_type="Float", label="FastSpeed"),
             ParTemplate('CanFinish', par_type='Toggle', label='CanFinish'),
