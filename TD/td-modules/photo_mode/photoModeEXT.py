@@ -25,6 +25,12 @@ class PhotoModeEXT(PhotoboothSceneEXT):
     def OnInit(self):
         # return False if initialization fails
         return True
+    
+    def _onEnterscene(self):
+        if self.Me.par.Showerrormessage:
+            self.Me.op("error_timer").par.start.pulse()
+        super()._onEnterscene()
+        pass
 
     def HandleZoom(self, zoom_amt):
         print("zoom", op("constant2").par.const0value)
@@ -63,7 +69,7 @@ class PhotoModeEXT(PhotoboothSceneEXT):
         page = self.GetPage('PhotoSelect')
         
         pars = [
-            ParTemplate('RetakePhoto', par_type='Toggle', label='RetakePhoto'),
+            ParTemplate('ShowErrorMessage', par_type='Toggle', label='Show Error Message'),
         ]
 
 
