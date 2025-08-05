@@ -253,12 +253,16 @@ class ComfyuiControlEXT(BaseEXT):
 				# op('handstat').replaceRow(0,str(handstat))
 		
 	def HandleResponse(self, data: str) -> None:
+		print("Handling Response from ComfyUI")
 		response = json.loads(data)
+		self.Me.par.Comfyuiconnected = True
+		self.Me.par.Gotcomfyheartbeat = True 
+		self.Me.op("heartbeat_wait").par.initialize.pulse()
 		if "prompt_id" in response and len(response) == 3:
 			print("Got prompt id: ", response["prompt_id"])
 			self.Me.par.Gotpromptid = True
 			self.Me.par.Currentcomfyid = response["prompt_id"]
-		elif self.Me.par.Gotpromptid and op.comfyui_control.par.Currentcomfyid.eval() in response:
+		elif self.Me.par.Waitforcompletion and self.Me.par.Gotpromptid and op.comfyui_control.par.Currentcomfyid.eval() in response:
 			print("Checking if workflow complete for  ", op.comfyui_control.par.Currentcomfyid.eval())
 			self.CheckIfWorkflowComplete(op.comfyui_control.par.Currentcomfyid.eval(), response[op.comfyui_control.par.Currentcomfyid.eval()],0)
 		else:
@@ -272,6 +276,12 @@ class ComfyuiControlEXT(BaseEXT):
 		op("webclient1").request(f"{self.comfyui_url}/history","GET")
 		pass
 
+	def HandleComfyHealthCheck(self):
+		self.Me.par.Gotcomfyheartbeat = False
+		self.Me.op("heartbeat_wait").par.start.pulse()
+		self.CheckForCompletion()
+		pass
+	
 	def HandleFailedResponse(self):
 		print("Failed to get response from ComfyUI")
 		self.Me.par.Waitforcompletion = False
@@ -288,6 +298,11 @@ class ComfyuiControlEXT(BaseEXT):
 		self.HandleFailedResponse()
 		pass
 
+	def HandleComfyHealthcheckTimeout(self):
+		print("ComfyUI Healthcheck Timeout")
+		if not self.Me.par.Gotcomfyheartbeat:
+			self.Me.par.Comfyuiconnected = False
+		pass
 
 	def _onProcessphoto(self, par):
 		self.Print(f"_onProcessPhoto - val: {par.eval()}")
@@ -302,6 +317,8 @@ class ComfyuiControlEXT(BaseEXT):
 		got_prompt_id.readOnly = True
 		comfyui_connected = ParTemplate("ComfyUIConnected", par_type='Toggle', label='ComfyUIConnected')
 		comfyui_connected.readOnly = True
+		got_comfy_heartbeat = ParTemplate("GotComfyHeartbeat", par_type='Toggle', label='GotComfyHeartbeat')
+		got_comfy_heartbeat.readOnly = True
 		pars = [
 			ParTemplate('ProcessPhoto', par_type='Pulse', label='ProcessPhoto'),
 			ParTemplate("CurrentCapture", par_type='File', label='CurrentCapture'),
@@ -309,7 +326,8 @@ class ComfyuiControlEXT(BaseEXT):
 			ParTemplate("CurrentComfyID", par_type="Str", label="CurrentComfyID"),
 			wait_for_completion_toggle,
 			got_prompt_id,
-			comfyui_connected
+			comfyui_connected,
+			got_comfy_heartbeat
 		]
 		for par in pars:
 			par.createPar(page)

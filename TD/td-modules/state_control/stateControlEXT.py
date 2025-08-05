@@ -44,6 +44,8 @@ class StateControlEXT(BaseEXT):
         op.upload_control.par.Status = "inactive"
         op.qrcode_scene.par.Showqrcode = 0
         op.photo_capture.par.Showerrormessage = 0
+        op.qrcode_scene.op("loading_bar").par.Initialize.pulse()
+        op.loading_control.op("loading_bar").par.Initialize.pulse()
         for index, row in enumerate(states.rows()):
             if index > 0:
                 scene = (states[index,"container_name"])

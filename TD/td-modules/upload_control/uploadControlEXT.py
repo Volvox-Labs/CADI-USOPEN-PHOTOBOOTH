@@ -19,10 +19,9 @@ class UploadControlEXT(BaseEXT):
         self._createControlsPage()
         self.Me.par.opshortcut = 'upload_control'
         
-        self.ws_client = ""
-        if self.Me.op("clients").numRows == 2:
-            self.ws_client = self.Me.op("clients")[1,0].val
-            op.upload_control.op("webserver1").webSocketSendText(self.ws_client,json.dumps({"message": "connected"}))
+        self.ws_client = self.Me.par.Currentclient
+        if self.ws_client:
+            op.upload_control.op("webserver1").webSocketSendText(self.ws_client,json.dumps({"task":"startup","message": "connected"}))
         
         pass
 
@@ -30,13 +29,14 @@ class UploadControlEXT(BaseEXT):
         # return False if initialization fails
         return True
 
-    def HandleNewClient(self,client):
-        self.ws_client = client
-        self.Me.op("clients").appendRow([client])
+    def HandleNewClient(self,client):        
+        self.Me.par.Currentclient = client
         pass
     
     def HandleReceiveText(self, client, text):
         print("Received text from clien t: ", text)
+        self.Me.par.Uploaderconnected = True
+        self.Me.par.Gotuploaderheartbeat = True
         if text and text !="null":
             response = json.loads(text)
             if "qr_code_path" not in response:
@@ -53,9 +53,7 @@ class UploadControlEXT(BaseEXT):
         
     def HandleDisconnect(self, client):
         print("Client disconnected: ", client)
-        self.Me.op("clients").deleteRow(self.Me.op("clients").findCell(client).row)
-        if self.ws_client == client:
-            self.ws_client = ""
+        self.Me.par.Currentclient = ""
         pass
     
     def GetTakeawayFileName(self):
@@ -66,10 +64,22 @@ class UploadControlEXT(BaseEXT):
     def _onUploadvideo(self):
         movie = self.GetTakeawayFileName()
         print("uploading movie: ", movie)
-        msg = {"file_name": movie}
+        msg = {"task":"upload","file_name": movie}
         op.upload_control.op("webserver1").webSocketSendText(self.ws_client,json.dumps(msg))
         op.upload_control.par.Status = "processing"
         print("sent upload ")
+        pass
+
+    def HandleUploaderHealthCheck(self):
+        self.Me.par.Gotuploaderheartbeat = False
+        self.Me.op("heartbeat_wait").par.start.pulse()
+        op.upload_control.op("webserver1").webSocketSendText(self.ws_client,json.dumps({"task":"heartbeat", "message": "connected"}))
+        pass
+    
+    def HandleUploaderHealthcheckTimeout(self):
+        print("Uploader Healthcheck Timeout")
+        if not self.Me.par.Gotuploaderheartbeat:
+            self.Me.par.Uploaderconnected = False
         pass
     # Below is an example of a parameter callback. Simply create a method that starts with "_on" and then the name of the parameter.
 
@@ -93,11 +103,19 @@ class UploadControlEXT(BaseEXT):
         page = self.GetPage('Controls')
         status_par = ParTemplate('Status', par_type='Str', label='Status')
         status_par.readOnly = True
-        status_par.default = "inactive"
+        status_par.default = "inactive" 
+        current_client_par = ParTemplate('CurrentClient', par_type='Str', label='Current Client')
+        current_client_par.readOnly = True
+        uploader_connected = ParTemplate("UploaderConnected", par_type='Toggle', label='UploaderConnected')
+        uploader_connected.readOnly = True
+        got_uploader_heartbeat = ParTemplate("GotUploaderHeartbeat", par_type='Toggle', label='GotUploaderHeartbeat')
+        got_uploader_heartbeat.readOnly = True
         pars = [
             ParTemplate('UploadVideo', par_type='Pulse', label='UploadVideo'),
-            status_par
-
+            status_par,
+            current_client_par,
+            uploader_connected,
+            got_uploader_heartbeat
         ]
         for par in pars:
             par.createPar(page)
