@@ -57,6 +57,7 @@ class CameraControlEXT(BaseEXT):
         pars = [
             ParTemplate('CaptureCameraFeed', par_type='Pulse', label='CaptureCameraFeed'),
             ParTemplate("OutputPath", par_type='Folder', label='OutputPath'),
+            ParTemplate("UseTestCapture", par_type='Toggle', label='UseTestCapture'),
         ]
         for par in pars:
             par.createPar(page)

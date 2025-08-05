@@ -253,7 +253,6 @@ class ComfyuiControlEXT(BaseEXT):
 				# op('handstat').replaceRow(0,str(handstat))
 		
 	def HandleResponse(self, data: str) -> None:
-		print("Handling Response from ComfyUI")
 		response = json.loads(data)
 		self.Me.par.Comfyuiconnected = True
 		self.Me.par.Gotcomfyheartbeat = True 
@@ -272,7 +271,6 @@ class ComfyuiControlEXT(BaseEXT):
 		pass
 	
 	def CheckForCompletion(self) -> None:
-		print("Making request")
 		op("webclient1").request(f"{self.comfyui_url}/history","GET")
 		pass
 

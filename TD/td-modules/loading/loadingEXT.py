@@ -26,6 +26,11 @@ class LoadingEXT(PhotoboothSceneEXT):
         # return False if initialization fails
         return True
     
+    def _onEnterscene(self):
+        op.loading_control.op("loading_bar").par.Start.pulse()
+        super()._onEnterscene()
+        pass
+
     def HandleLoadingCanFinish(self):
         self.Me.op("loading_bar").op("timer2").goTo(segment=2)
         pass

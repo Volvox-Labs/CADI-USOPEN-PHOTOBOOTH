@@ -34,11 +34,13 @@ class UploadControlEXT(BaseEXT):
         pass
     
     def HandleReceiveText(self, client, text):
-        print("Received text from clien t: ", text)
         self.Me.par.Uploaderconnected = True
         self.Me.par.Gotuploaderheartbeat = True
+        self.Me.op("heartbeat_wait").par.initialize.pulse()
         if text and text !="null":
+            
             response = json.loads(text)
+            print(response)
             if "qr_code_path" not in response:
                 return
             qr_code_path = response["qr_code_path"]
@@ -64,7 +66,7 @@ class UploadControlEXT(BaseEXT):
     def _onUploadvideo(self):
         movie = self.GetTakeawayFileName()
         print("uploading movie: ", movie)
-        msg = {"task":"upload","file_name": movie}
+        msg = {"task":"process_and_upload","file_name": movie}
         op.upload_control.op("webserver1").webSocketSendText(self.ws_client,json.dumps(msg))
         op.upload_control.par.Status = "processing"
         print("sent upload ")
