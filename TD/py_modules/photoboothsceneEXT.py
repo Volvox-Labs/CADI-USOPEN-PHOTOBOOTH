@@ -42,7 +42,8 @@ class PhotoboothSceneEXT(BaseEXT):
         op.state_control.op("idle_timeout").par.initialize.pulse()
         self.Me.par.Buttonpress.pulse()
         self.Me.par.Buttonpressed = 1
-        
+        print(op.fade_control.par.Fadeincomplete.eval())
+        print(current_scene == op.state_control.par.Scenename.eval())
         if current_scene == op.state_control.par.Scenename.eval() and op.fade_control.par.Fadeincomplete.eval():
             self.Me.par.Exitscene.pulse()
             

@@ -74,10 +74,10 @@ class StateControlEXT(BaseEXT):
 
     # Below is an example of creating an event loop by overriding the OnFrameStart method.
 
-    # def OnFrameStart(self, frame: int):
-    #     if frame % 60 == 0:
-    #         self.OnEventLoop1()
-    #     return 
+    def OnStart(self):
+        print("\n\n\nPROJECT STARTED \n\n\n")
+        self.Me.par.Resetphotobooth.pulse()
+        return 
 
     # def OnEventLoop1(self):
     #     self.Print('every second')

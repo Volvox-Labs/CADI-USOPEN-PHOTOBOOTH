@@ -29,17 +29,24 @@ class AttractVideoSceneEXT(PhotoboothSceneEXT):
     def _onEnterscene(self):
         self.Me.op("intro_video").par.play = 1
         self.Me.op("intro_video").par.cuepulse.pulse()
+        self.Me.par.Buttonpressed = 0
         super()._onEnterscene()
+        pass
+
+    def _onExitscene(self):
+        self.Me.op("intro_video").par.play = 0
+        self.Me.par.Buttonpressed = 0
+        super()._onExitscene()
         pass
         
     def HandleButtonPress(self, current_scene):
         if not self.Me.par.Buttonpressed: 
-            self.Me.op("intro_video").par.play = 0
-            super().HandleButtonPress(current_scene)
+            self._onExitscene()
         pass
 
     def HandleVideoComplete(self):
-        self.Me.par.Exitscene.pulse()
+        if not self.Me.par.Buttonpressed and op.state_control.par.State.eval() == 1:
+            self.Me.par.Exitscene.pulse()
         pass
     # Below is an example of a parameter callback. Simply create a method that starts with "_on" and then the name of the parameter.
 
