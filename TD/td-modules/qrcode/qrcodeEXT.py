@@ -33,9 +33,9 @@ class QrcodeEXT(PhotoboothSceneEXT):
         # return False if initialization fails
         return True
     
-    def _onShowqrcode(self,par):
-        if par:
-            self.Me.op("loading_bar").par.Start.pulse()
+    # def _onShowqrcode(self,par):
+    #     if par:
+    #         self.Me.op("loading_bar").par.Start.pulse()
 
     def HandleQRCodeReady(self):
         self.Me.op("loading_bar").par.Start.pulse()

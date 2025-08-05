@@ -228,18 +228,18 @@ class ComfyuiControlEXT(BaseEXT):
 			current_id = (prompt_data["status"]["messages"][2][1]["prompt_id"])
 			if status["status_str"] == "success":
 				#print(f"✅ Prompt {prompt_id} finished.")
-				op.poster_control.CreateTakeaway()
+				
 				self.Me.par.Waitforcompletion = False
 				print("The Prompt  Completed:  " + status["status_str"])  # Return the full prompt result if needed
 				handstat = (prompt_data["outputs"]["36"]["text"][0])
 				print(type(handstat))
 				print("Hand Status: " + handstat)
 
-				# if self.Me.par.Enablehanddetection.eval():
 				if handstat == "True":
 					print("GOT A HAND")
 					self.HandleFailedResponse()
 				else:
+					op.poster_control.CreateTakeaway()
 					print("NO HAND")
 				images = prompt_data["outputs"]["90"]["images"]
 				if images:
@@ -280,6 +280,7 @@ class ComfyuiControlEXT(BaseEXT):
 		self.Me.par.Gotpromptid = False
 		op("completion_timer").par.initialize.pulse()
 		op.loading_control.par.Canfinish = 1
+		op.loading_control.HandleLoadingCanFinish()
 		pass
 
 	def HandleNoResponse(self):
@@ -299,13 +300,16 @@ class ComfyuiControlEXT(BaseEXT):
 		wait_for_completion_toggle.readOnly = True
 		got_prompt_id = ParTemplate("GotPromptID", par_type='Toggle', label='GotPromptID')
 		got_prompt_id.readOnly = True
+		comfyui_connected = ParTemplate("ComfyUIConnected", par_type='Toggle', label='ComfyUIConnected')
+		comfyui_connected.readOnly = True
 		pars = [
 			ParTemplate('ProcessPhoto', par_type='Pulse', label='ProcessPhoto'),
 			ParTemplate("CurrentCapture", par_type='File', label='CurrentCapture'),
 			ParTemplate("EnableHandDetection",par_type="Toggle", label="EnableHandDetection"),
 			ParTemplate("CurrentComfyID", par_type="Str", label="CurrentComfyID"),
 			wait_for_completion_toggle,
-			got_prompt_id
+			got_prompt_id,
+			comfyui_connected
 		]
 		for par in pars:
 			par.createPar(page)

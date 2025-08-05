@@ -26,6 +26,12 @@ class StateControlEXT(BaseEXT):
         # return False if initialization fails
         return True
     
+    def HandlePhotoboothInactive(self):
+        if not self.Me.par.State == self.HomeScene:
+            op.state_control.par.Nextstate = self.HomeScene
+            self.Me.par.Sceneop.eval().par.Exitscene.pulse()
+        pass
+
     def HandleSceneTimeout(self):
         print("sene timeout ")
         print("Setting next state to video attract")

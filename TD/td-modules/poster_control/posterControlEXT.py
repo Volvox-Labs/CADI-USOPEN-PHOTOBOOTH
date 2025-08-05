@@ -44,6 +44,7 @@ class PosterControlEXT(BaseEXT):
         print("Recording Complete ")
         op.loading_control.par.Canfinish = 1
         op.poster_control.par.Takeawayrecording = 0
+        op.loading_control.HandleLoadingCanFinish()
         self.Me.op("intro_timer").par.initialize.pulse()
     pass
 
