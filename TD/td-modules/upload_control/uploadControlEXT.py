@@ -40,7 +40,7 @@ class UploadControlEXT(BaseEXT):
         if text and text !="null":
             
             response = json.loads(text)
-            print(response)
+            self.Logger.debug(f"Received text from {client}: {response}")
             if "qr_code_path" not in response:
                 return
             qr_code_path = response["qr_code_path"]
