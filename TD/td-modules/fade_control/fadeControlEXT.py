@@ -27,9 +27,7 @@ class FadeControlEXT(BaseEXT):
         current_scene = op.state_control.par.Sceneop.eval()
         if current_scene.par.Buttonpressed:
             current_scene.HandleButtonPress(current_scene.name)
-    # def HandleFadeOutComplete(self):
-        
-    #     pass
+        pass
 
     # Below is an example of a parameter callback. Simply create a method that starts with "_on" and then the name of the parameter.
 

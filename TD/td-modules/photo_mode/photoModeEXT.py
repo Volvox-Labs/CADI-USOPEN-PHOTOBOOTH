@@ -45,13 +45,31 @@ class PhotoModeEXT(PhotoboothSceneEXT):
         print("zoom", op("constant2").par.const0value)
         pass
     
-    def HandleButtonPress(self, button_name: str) -> None:
+    def HandleTakePicture(self):
         op.camera_control.par.Capturecamerafeed.pulse()
         op.loading_control.par.Canfinish = 0
-        super().HandleButtonPress(button_name)
-        # Implement your button handling logic here
+        super().HandleButtonPress(self.Me.name)
         pass
-    # Below is an example of a parameter callback. Simply create a method that starts with "_on" and then the name of the parameter.
+
+    def HandlePhotoButtonPress(self, button_name: str) -> None:
+        print("here ")
+        # If the button is not pressed 
+        if not self.Me.par.Buttonpressed.eval():
+            # If fade is in complete you can start countdown 
+            if op.fade_control.par.Fadeincomplete.eval():
+                self.HandleButtonPress(button_name)
+            else:
+                # Otherwise let fade in complete and then start countdown
+                self.Me.par.Buttonpressed = 1
+        # else:
+        #     print("setting button pressed")
+        #     self.Me.par.Buttonpressed = 1
+        pass
+
+    def HandleButtonPress(self, button_name: str) -> None:
+        print("starting countdown timer")
+        op("countdown_timer").par.start.pulse()
+        pass
 
     # def _onExampletoggle(self, par):
     #     self.Logger.debug(f"_onExampleToggle - val: {par.eval()}")
