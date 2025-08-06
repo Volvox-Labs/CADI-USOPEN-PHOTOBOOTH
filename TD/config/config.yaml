@@ -5,9 +5,9 @@ vars:
 default:
   td:
     project:
-      performOnStart: False
+      performOnStart: True
     ui:
-      performMode: False
+      performMode: True
   vars:
     RESX: 2160
     RESY: 3840

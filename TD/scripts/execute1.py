@@ -18,7 +18,7 @@ def onStart():
         if op('main') is None:
             return
     status_op = op('/window_status_view')
-    status_op.par.monitor.val = 0
+    status_op.par.monitor.val = 2
     if len(monitors) > 1:
         if is_headless:
             status_op.par.monitor.val = find_main_monitor()
