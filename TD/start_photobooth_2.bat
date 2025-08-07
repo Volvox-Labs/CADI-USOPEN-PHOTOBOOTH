@@ -49,7 +49,7 @@ set comfyui_url=http://localhost:8189
 set comfyui_inputs_dir=C:/ComfyUI_windows_portable/ComfyUI_windows_portable/ComfyUI/input/
 set comfyui_outputs_dir=C:/ComfyUI_windows_portable/ComfyUI_windows_portable/ComfyUI/output/
 set mosaic_output_path=D:\Mosaic\SVR2
-set status_view_monitor_index=2
+set status_view_monitor_index=0
 :: Monitor index should be set based on which touch monitor you want to use
 set monitor_index=2
 set blackmagic_camera_index=1
