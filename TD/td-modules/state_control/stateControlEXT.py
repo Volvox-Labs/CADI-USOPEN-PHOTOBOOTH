@@ -79,6 +79,7 @@ class StateControlEXT(BaseEXT):
     def OnStart(self):
         print("\n\n\nPROJECT STARTED \n\n\n")
         self.Me.par.Resetphotobooth.pulse()
+        op.camera_control.par.Usetestcapture = 0
         return 
 
     # def OnEventLoop1(self):

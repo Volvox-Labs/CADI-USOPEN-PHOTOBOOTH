@@ -30,6 +30,11 @@ class AttractModeEXT(PhotoboothSceneEXT):
         super()._onEnterscene()
         pass
 
+    def HandleButtonPress(self, current_scene):
+        op.analytics_control.Send_mixpanel_event()
+        super().HandleButtonPress(self.Me.name)
+        pass
+
     # Below is an example of a parameter callback. Simply create a method that starts with "_on" and then the name of the parameter.
 
     # def _onExampletoggle(self, par):
