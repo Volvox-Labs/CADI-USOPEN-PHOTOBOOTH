@@ -32,6 +32,7 @@ class AttractModeEXT(PhotoboothSceneEXT):
 
     def HandleButtonPress(self, current_scene):
         op.analytics_control.Send_mixpanel_event()
+        op.state_control.par.Photoboothactive = 1
         super().HandleButtonPress(self.Me.name)
         pass
 

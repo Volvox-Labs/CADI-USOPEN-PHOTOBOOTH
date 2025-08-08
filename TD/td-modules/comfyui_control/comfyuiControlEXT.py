@@ -320,7 +320,6 @@ class ComfyuiControlEXT(BaseEXT):
 		pars = [
 			ParTemplate('ProcessPhoto', par_type='Pulse', label='ProcessPhoto'),
 			ParTemplate("CurrentCapture", par_type='File', label='CurrentCapture'),
-			ParTemplate("EnableHandDetection",par_type="Toggle", label="EnableHandDetection"),
 			ParTemplate("CurrentComfyID", par_type="Str", label="CurrentComfyID"),
 			wait_for_completion_toggle,
 			got_prompt_id,

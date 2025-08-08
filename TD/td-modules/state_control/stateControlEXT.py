@@ -42,6 +42,7 @@ class StateControlEXT(BaseEXT):
     def HandleExperienceComplete(self):
         states = op.state_control.op("state_table")
         op.upload_control.par.Status = "inactive"
+        self.Me.par.Photoboothactive = 0
         op.qrcode_scene.par.Showqrcode = 0
         op.photo_capture.par.Showerrormessage = 0
         op.qrcode_scene.op("loading_bar").par.Initialize.pulse()
@@ -94,7 +95,6 @@ class StateControlEXT(BaseEXT):
             ParTemplate('State', par_type='Int', label='State'),
             ParTemplate('NextState', par_type='Int', label='NextState'),
             ParTemplate('ResetPhotoBooth', par_type='Pulse', label='ResetPhotoBooth'),
-            ParTemplate('CaptureMode', par_type='Toggle', label='CaptureMode'),
             ParTemplate('PhotoBoothActive', par_type='Toggle', label='PhotoBoothActive'),
             ParTemplate("DevMode",par_type="Toggle",label="DevMode")
 
