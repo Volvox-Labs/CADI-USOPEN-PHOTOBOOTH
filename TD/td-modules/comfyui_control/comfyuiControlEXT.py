@@ -239,17 +239,21 @@ class ComfyuiControlEXT(BaseEXT):
 					print("GOT A HAND")
 					self.HandleFailedResponse()
 				else:
-					op.poster_control.CreateTakeaway()
+					
 					print("NO HAND")
-				images = prompt_data["outputs"]["90"]["images"]
-				if images:
-					image_path = images[0]["filename"]
-					print("file path: " + str(image_path))
-					op("result").replaceRow(0, str(image_path))
-					# TODO this doesn't need to be a table 
-					op("in_progress_prompts").deleteRow(row_index)  # Remove the completed prompt from the in_progress_prompts table
-					if self.in_progress_prompts.numRows == 0:
-						op("completion_timer").par.initialize.pulse()
+					images = prompt_data["outputs"]["90"]["images"]
+					if images:
+						image_path = images[0]["filename"]
+						print("file path: " + str(image_path))
+						op("result").replaceRow(0, str(image_path))
+						if not op.poster_control.CheckForEmptyMask():
+							op.poster_control.CreateTakeaway()				
+							# TODO this doesn't need to be a table 
+							op("in_progress_prompts").deleteRow(row_index)  # Remove the completed prompt from the in_progress_prompts table
+							if self.in_progress_prompts.numRows == 0:
+								op("completion_timer").par.initialize.pulse()
+						else:
+							self.HandleFailedResponse()
 				# op('handstat').replaceRow(0,str(handstat))
 		
 	def HandleResponse(self, data: str) -> None:
@@ -297,7 +301,6 @@ class ComfyuiControlEXT(BaseEXT):
 		pass
 
 	def HandleComfyHealthcheckTimeout(self):
-		print("ComfyUI Healthcheck Timeout")
 		if not self.Me.par.Gotcomfyheartbeat:
 			self.Me.par.Comfyuiconnected = False
 		pass
