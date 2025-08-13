@@ -43,19 +43,18 @@ IF EXIST %TOUCHPATH% (
 )
 
 :: BEGIN ENV VARIABLES 
-set MODE=production
+set MODE=dev
 set assets_path=D:\Cadi2025\assets\
 set comfyui_url=http://localhost:8188
 set comfyui_inputs_dir=C:/ComfyUI_windows_portable/ComfyUI/input
 set comfyui_outputs_dir=C:/ComfyUI_windows_portable/ComfyUI/output
-set mosaic_output_path=D:\Mosaic\SVR3
+set mosaic_output_path=D:\Mosaic\SVR1
 :: Moniter index should be set based on which touch monitor you want to use
 set monitor_index=1
-set blackmagic_camera_index=1
+set blackmagic_camera_index=0
 set status_view_monitor_index=0
 set takeaways_render_dir=D:/Takeaway/renders/
 set uploader_websocket_url=ws://localhost:9985
-set dante_channels=1:Dante_tx_1,2:Dante_tx_2
-set photobooth_id=3
+set dante_channels=1:Dante_tx_1 2:Dante_tx_2
 :: start our project file with the target TD installation
 start "" %TOUCHPATH% %TOEFILE%
