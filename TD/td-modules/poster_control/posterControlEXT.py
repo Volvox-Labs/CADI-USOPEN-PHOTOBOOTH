@@ -48,6 +48,8 @@ class PosterControlEXT(BaseEXT):
         self.Me.op("intro_timer").par.initialize.pulse()
     pass
 
+    def CheckForEmptyMask(self):
+        return self.Me.op("CheckForBlank/mask_alpha")["a"].eval() == 0
     # Below is an example of a parameter callback. Simply create a method that starts with "_on" and then the name of the parameter.
 
     # def _onExampletoggle(self, par):
@@ -87,6 +89,36 @@ class PosterControlEXT(BaseEXT):
                         label="TakeawayOutputPath"),
             takeaway_recording_toggle,
         ]
+        for par in pars:
+            par.createPar(page)
+
+        page = self.GetPage('Style')
+        
+        enable_style_mode_par = ParTemplate(
+            "EnableStyleMode", par_type="Toggle", label="EnableStyleMode")
+        
+        scale_par = ParTemplate("Scale", par_type="Float", label="Scale")
+        scale_par.default = 1.66
+        scale_par.enableExpr = "me.par.Enablestylemode.eval()"
+        
+        translate_y_par = ParTemplate("TranslateY", par_type="Float", label="TranslateY")
+        translate_y_par.default = -0.03
+        translate_y_par.enableExpr = "me.par.Enablestylemode.eval()"
+        
+        profile_scale_par = ParTemplate("ProfileScale", par_type="Float", label="ProfileScale")
+        profile_scale_par.default = 0.299
+        profile_scale_par.enableExpr = "me.par.Enablestylemode.eval()"
+
+        profile_transform_x_par = ParTemplate("ProfileTransformX", par_type="Float", label="ProfileTransformX")
+        profile_transform_x_par.default = -0.03
+        profile_transform_x_par.enableExpr = "me.par.Enablestylemode.eval()"
+
+        profile_transform_y_par = ParTemplate("ProfileTransformY", par_type="Float", label="ProfileTransformY")
+        profile_transform_y_par.default = 0.03
+        profile_transform_y_par.enableExpr = "me.par.Enablestylemode.eval()"
+        
+        
+        pars = [enable_style_mode_par,scale_par,translate_y_par, profile_scale_par, profile_transform_x_par, profile_transform_y_par]
         for par in pars:
             par.createPar(page)
 
