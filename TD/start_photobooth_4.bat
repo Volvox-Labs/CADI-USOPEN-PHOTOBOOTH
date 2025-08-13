@@ -43,7 +43,7 @@ IF EXIST %TOUCHPATH% (
 )
 
 :: BEGIN ENV VARIABLES 
-set MODE=dev
+set MODE=production
 set assets_path=D:\Cadi2025\assets\
 set comfyui_url=http://localhost:8189
 set comfyui_inputs_dir=C:/ComfyUI_windows_portable/ComfyUI/input/
@@ -52,7 +52,7 @@ set mosaic_output_path=D:\Mosaic\SVR3
 set status_view_monitor_index=0
 :: Moniter index should be set based on which touch monitor you want to use
 set monitor_index=2
-set blackmagic_camera_index=1
+set blackmagic_camera_index=0
 set takeaways_render_dir=D:/Takeaway/renders/
 set uploader_websocket_url=ws://localhost:9986
 set dante_channels=3:Dante_tx_3,4:Dante_tx_4

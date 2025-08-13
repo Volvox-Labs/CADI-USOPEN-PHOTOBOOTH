@@ -7,7 +7,10 @@ except ModuleNotFoundError:
 def onStart():
     is_production = root.var('mode') == 'production'
     if is_production:
-          op('main').par.winopen.pulse()    
+          print("LAUNCHING MAIN WINDOW")
+          op('main').par.winopen.pulse()
+    else:
+          print("NOT LAUNCHING MAIN WINDOW - DEV MODE")
     return
 
 def onCreate():
