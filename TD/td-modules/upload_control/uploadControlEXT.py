@@ -79,7 +79,6 @@ class UploadControlEXT(BaseEXT):
         pass
     
     def HandleUploaderHealthcheckTimeout(self):
-        print("Uploader Healthcheck Timeout")
         if not self.Me.par.Gotuploaderheartbeat:
             self.Me.par.Uploaderconnected = False
         pass

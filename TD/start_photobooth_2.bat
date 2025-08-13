@@ -55,6 +55,7 @@ set monitor_index=2
 set blackmagic_camera_index=1
 set takeaways_render_dir=D:/Takeaway/renders/
 set uploader_websocket_url=ws://localhost:9986
-set dante_channels=1:Dante_tx_3,2:Dante_tx_4
+set dante_channels=3:Dante_tx_3 4:Dante_tx_4
+set photobooth_id=2
 :: start our project file with the target TD installation
 start "" %TOUCHPATH% %TOEFILE%
