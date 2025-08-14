@@ -18,7 +18,11 @@ class UploadControlEXT(BaseEXT):
         BaseEXT.__init__(self, myop, par_callback_on=True)
         self._createControlsPage()
         self.Me.par.opshortcut = 'upload_control'
-        
+        #TODO this should just be set via state control 
+        photo_capture_row = op.state_control.op("state_table").findCell("photo_capture_scene").row
+
+        self.retake_photo_state_id = op.state_control.op("state_table")[photo_capture_row, "state id"].val
+
         self.ws_client = self.Me.par.Currentclient
         if self.ws_client:
             op.upload_control.op("webserver1").webSocketSendText(self.ws_client,json.dumps({"task":"startup","message": "connected"}))
@@ -33,6 +37,19 @@ class UploadControlEXT(BaseEXT):
         self.Me.par.Currentclient = client
         pass
     
+    def HandleFailedUpload(self):
+        self.Logger.debug("Handling Failed Upload")
+        op.state_control.par.Nextstate = self.retake_photo_state_id
+        op.photo_capture.par.Showerrormessage = 1
+        op.comfyui_control.par.Gotpromptid = False
+        op.comfyui_control.par.Waitingforprompt = False
+        op("loading_timer").par.initialize.pulse()
+        self.Me.par.Exitscene.pulse()
+    #     op.loading_control.par.Canfinish = 1
+	# 	op.loading_control.HandleLoadingCanFinish()
+	# 	pass
+
+    
     def HandleReceiveText(self, client, text):
         self.Me.par.Uploaderconnected = True
         self.Me.par.Gotuploaderheartbeat = True
@@ -40,18 +57,28 @@ class UploadControlEXT(BaseEXT):
         if text and text !="null":
             
             response = json.loads(text)
-            self.Logger.debug(f"Received text from {client}: {response}")
-            if "qr_code_path" not in response:
-                return
-            qr_code_path = response["qr_code_path"]
-            if qr_code_path:
-                op.qrcode_scene.op("qrcode_file").par.file = qr_code_path
-                print(f"QR code path for {client}: {qr_code_path}")
-                op.upload_control.par.Status = "complete"
-                if op.state_control.par.Scenename.eval() == "qrcode_scene":
-                    op.qrcode_scene.par.Showqrcode = 1
-            else:
-                print(f"No QR code path found in response from {client}")
+            if "status" in response:
+                if response["status"] == "video_upload_success":
+                    self.Logger.debug(f"Received text from {client}: {response}")
+                    if "qr_code_path" not in response:
+                        return
+                    qr_code_path = response["qr_code_path"]
+                    if qr_code_path:
+                        op.qrcode_scene.op("qrcode_file").par.file = qr_code_path
+                        self.Logger.debug(f"QR code path for {client}: {qr_code_path}")
+                        op.upload_control.par.Status = "complete"
+                        if op.state_control.par.Scenename.eval() == "qrcode_scene":
+                            op.qrcode_scene.par.Showqrcode = 1
+                    else:
+                        self.Logger.debug(f"No QR code path found in response from {client}")
+                elif response["status"] == "video_upload_failed":
+                    op.upload_control.par.Status = "error"
+                    self.Logger.debug(f"Video upload failed for {client}")
+                elif response["status"] == "heartbeat":
+                    self.Logger.debug(f"Heartbeat received from {client}")
+                
+                else:
+                    self.Logger.debug(f"Received unknown status from {client}: {response}")
         
     def HandleDisconnect(self, client):
         print("Client disconnected: ", client)
