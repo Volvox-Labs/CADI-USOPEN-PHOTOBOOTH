@@ -39,9 +39,9 @@ class PhotoSelectEXT(PhotoboothSceneEXT):
     
     def PrepAndTriggerTakeaway(self):
         colors = ["blue","red","white","yellow"]
-        selected_poster_index = int(self.Me.par.Selectedphoto.eval()) - 1
-        selected_poster_name = f"poster{colors[selected_poster_index]}"
-        op.poster_control.op("selectposter").par.top = selected_poster_name
+        # selected_poster_index = int(self.Me.par.Selectedphoto.eval()) - 1
+        # selected_poster_name = f"poster{colors[selected_poster_index]}"
+        # op.poster_control.op("selectposter").par.top = selected_poster_name
         op.upload_control.par.Uploadvideo.pulse()
         pass
     

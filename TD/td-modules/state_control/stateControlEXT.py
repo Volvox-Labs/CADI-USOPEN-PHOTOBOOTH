@@ -82,6 +82,7 @@ class StateControlEXT(BaseEXT):
         self.Me.par.Resetphotobooth.pulse()
         op.camera_control.par.Usetestcapture = 0
         op.poster_control.par.Usetestcapture = 0
+        op.poster_control.par.Enablestylemode = 0
         return 
 
     # def OnEventLoop1(self):
