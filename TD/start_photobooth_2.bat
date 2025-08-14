@@ -43,7 +43,7 @@ IF EXIST %TOUCHPATH% (
 )
 
 :: BEGIN ENV VARIABLES 
-set MODE=dev
+set MODE=production
 set assets_path=D:\Cadi2025\assets\
 set comfyui_url=http://localhost:8189
 set comfyui_inputs_dir=C:/ComfyUI_windows_portable/ComfyUI_windows_portable/ComfyUI/input/
