@@ -45,7 +45,7 @@ class CameraControlEXT(BaseEXT):
 
     def HandleHeartbeatCycle(self):
         
-        current_frame = op.camera_control.op("info_b1")["frame_timestamp"].eval()
+        current_frame = self.info_chop["frame_timestamp"].eval()
         if current_frame == float(op.camera_control.op("heartbeat_frame").text):
             self.Me.par.Cameraconnected = False
         else:
@@ -53,7 +53,7 @@ class CameraControlEXT(BaseEXT):
             self.Me.op("heartbeat_frame").text = current_frame
 
     def HeartbeatStart(self):
-        self.Me.op("heartbeat_frame").text = op.camera_control.op("info_b1")["frame_timestamp"].eval()
+        self.Me.op("heartbeat_frame").text = self.info_chop["frame_timestamp"].eval()
         pass
     def _onCapturecamerafeed(self, par):
         # This method should handle the camera feed capture logic
