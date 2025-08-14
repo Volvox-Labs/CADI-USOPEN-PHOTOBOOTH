@@ -18,6 +18,8 @@ class CameraControlEXT(BaseEXT):
         BaseEXT.__init__(self, myop, par_callback_on=True)
         self.Me.par.opshortcut = 'camera_control'
         self._createControlsPage()
+
+        self.info_chop = self.Me.op("info_b1") if int(root.var("blackmagic_camera_index")) == 0 else self.Me.op("info_b2")
         pass
 
     def OnInit(self):
@@ -41,6 +43,18 @@ class CameraControlEXT(BaseEXT):
     #     self.Print('every second')
     #     pass
 
+    def HandleHeartbeatCycle(self):
+        
+        current_frame = op.camera_control.op("info_b1")["frame_timestamp"].eval()
+        if current_frame == float(op.camera_control.op("heartbeat_frame").text):
+            self.Me.par.Cameraconnected = False
+        else:
+            self.Me.par.Cameraconnected = True
+            self.Me.op("heartbeat_frame").text = current_frame
+
+    def HeartbeatStart(self):
+        self.Me.op("heartbeat_frame").text = op.camera_control.op("info_b1")["frame_timestamp"].eval()
+        pass
     def _onCapturecamerafeed(self, par):
         # This method should handle the camera feed capture logic
         print('Capturing camera feed...')
@@ -54,10 +68,14 @@ class CameraControlEXT(BaseEXT):
 
     def _createControlsPage(self) -> None:
         page = self.GetPage('Controls')
+
+        camera_connected = ParTemplate("CameraConnected", par_type='Toggle', label='CameraConnected')
+        camera_connected.readOnly = True
         pars = [
             ParTemplate('CaptureCameraFeed', par_type='Pulse', label='CaptureCameraFeed'),
             ParTemplate("OutputPath", par_type='Folder', label='OutputPath'),
             ParTemplate("UseTestCapture", par_type='Toggle', label='UseTestCapture'),
+            camera_connected
         ]
         for par in pars:
             par.createPar(page)
