@@ -27,6 +27,7 @@ class PhotoModeEXT(PhotoboothSceneEXT):
         return True
     
     def _onEnterscene(self):
+        op("constant2").par.const0value = 1
         op.loading_control.op("loading_bar").par.Initialize.pulse()
         if self.Me.par.Showerrormessage:
             self.Me.op("error_timer").par.start.pulse()
