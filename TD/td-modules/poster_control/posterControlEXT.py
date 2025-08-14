@@ -116,9 +116,20 @@ class PosterControlEXT(BaseEXT):
         profile_transform_y_par = ParTemplate("ProfileTransformY", par_type="Float", label="ProfileTransformY")
         profile_transform_y_par.default = 0.03
         profile_transform_y_par.enableExpr = "me.par.Enablestylemode.eval()"
-        
-        
-        pars = [enable_style_mode_par,scale_par,translate_y_par, profile_scale_par, profile_transform_x_par, profile_transform_y_par]
+
+        althea_scale_par = ParTemplate("AltheaScale", par_type="Float", label="AltheaScale")
+        althea_scale_par.default = 0.14
+        althea_scale_par.enableExpr = "me.par.Enablestylemode.eval()"
+
+        althea_transform_x_par = ParTemplate("AltheaTransformX", par_type="Float", label="AltheaTransformX")
+        althea_transform_x_par.default = -0.171
+        althea_transform_x_par.enableExpr = "me.par.Enablestylemode.eval()"
+
+        althea_transform_y_par = ParTemplate("AltheaTransformY", par_type="Float", label="AltheaTransformY")
+        althea_transform_y_par.default = -0.01
+        althea_transform_y_par.enableExpr = "me.par.Enablestylemode.eval()"
+
+        pars = [enable_style_mode_par,scale_par,translate_y_par, profile_scale_par, profile_transform_x_par, profile_transform_y_par, althea_scale_par, althea_transform_x_par, althea_transform_y_par]
         for par in pars:
             par.createPar(page)
 
