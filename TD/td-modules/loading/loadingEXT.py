@@ -32,7 +32,7 @@ class LoadingEXT(PhotoboothSceneEXT):
         pass
 
     def HandleLoadingCanFinish(self):
-        self.Me.op("loading_bar").op("timer2").goTo(segment=2)
+        self.Me.op("loading_bar").op("timer2").goTo(segment=4)
         pass
 
     # Below is an example of a parameter callback. Simply create a method that starts with "_on" and then the name of the parameter.
