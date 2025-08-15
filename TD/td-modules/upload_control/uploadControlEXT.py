@@ -42,9 +42,10 @@ class UploadControlEXT(BaseEXT):
         op.state_control.par.Nextstate = self.retake_photo_state_id
         op.photo_capture.par.Showerrormessage = 1
         op.comfyui_control.par.Gotpromptid = False
-        op.comfyui_control.par.Waitingforprompt = False
-        op("loading_timer").par.initialize.pulse()
-        self.Me.par.Exitscene.pulse()
+        op.comfyui_control.par.Waitforcompletion = False
+        # op("loading_timer").par.initialize.pulse()
+        op.state_control.HandleRetryExperience()
+        op.state_control.par.Sceneop.eval().par.Exitscene.pulse()
     #     op.loading_control.par.Canfinish = 1
 	# 	op.loading_control.HandleLoadingCanFinish()
 	# 	pass

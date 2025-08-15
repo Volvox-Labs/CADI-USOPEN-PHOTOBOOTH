@@ -39,6 +39,20 @@ class StateControlEXT(BaseEXT):
         op.state_control.par.Sceneop.eval().par.Exitscene.pulse()
         pass
     
+    def HandleRetryExperience(self):
+        print("Retrying Experience")
+        states = op.state_control.op("state_table")
+        op.upload_control.par.Status = "inactive"
+        op.qrcode_scene.par.Showqrcode = 0
+        op.qrcode_scene.op("loading_bar").par.Initialize.pulse()
+        op.loading_control.op("loading_bar").par.Initialize.pulse()
+        for index, row in enumerate(states.rows()):
+            if index > 2:
+                scene = (states[index,"container_name"])
+                print("Resetting button pressed for scene:", scene)
+                op(f"/project1/output/{scene}").par.Buttonpressed = False
+        pass
+
     def HandleExperienceComplete(self):
         states = op.state_control.op("state_table")
         op.upload_control.par.Status = "inactive"
