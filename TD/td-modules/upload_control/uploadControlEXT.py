@@ -100,6 +100,7 @@ class UploadControlEXT(BaseEXT):
         msg = {"task":"process_and_upload","file_name": movie}
         op.upload_control.op("webserver1").webSocketSendText(self.ws_client,json.dumps(msg))
         op.upload_control.par.Status = "processing"
+        op.qrcode_scene.par.Showqrcode = 0
         print("sent upload ")
         pass
 

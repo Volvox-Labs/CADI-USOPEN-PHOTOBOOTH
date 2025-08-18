@@ -80,11 +80,15 @@ class StateControlEXT(BaseEXT):
         pass
     # Below is an example of a parameter callback. Simply create a method that starts with "_on" and then the name of the parameter.
 
-    def _onResetphotobooth(self):
+    def Reset(self):
         self.Me.par.State = 2
         self.Me.par.Sceneop.eval().par.Enterscene.pulse()
         self.HandleExperienceComplete()
         op.fade_control.par.Fadevariation = self.Me.op("state_table")[1, "fade_variation"].val
+        pass
+
+    def _onResetphotobooth(self):
+        self.Reset()
 
     # def _onExampletoggle(self, par):
     #     self.Logger.debug(f"_onExampleToggle - val: {par.eval()}")
@@ -94,7 +98,7 @@ class StateControlEXT(BaseEXT):
 
     def OnStart(self):
         print("\n\n\nPROJECT STARTED \n\n\n")
-        self.Me.par.Resetphotobooth.pulse()
+        self.Reset()
         op.camera_control.par.Usetestcapture = 0
         op.poster_control.par.Usetestcapture = 0
         op.poster_control.par.Enablestylemode = 0
