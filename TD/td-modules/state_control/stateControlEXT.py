@@ -65,6 +65,7 @@ class StateControlEXT(BaseEXT):
             if index > 0:
                 scene = (states[index,"container_name"])
                 op(f"/project1/output/{scene}").par.Buttonpressed = False
+        print("Experience Complete pars set ")
     
     def HandleFadeOutComplete(self):
         # next_state = self.Me.op("state_table")[self.Me.par.State, "goto"].val
