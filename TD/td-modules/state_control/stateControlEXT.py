@@ -104,6 +104,11 @@ class StateControlEXT(BaseEXT):
         op.poster_control.par.Enablestylemode = 0
         return 
 
+    def _onMainwindowopen(self,par):
+        if not par:
+            print("WINDOW CLOSED REOPENING ")
+            op("/main").par.winopen.pulse()
+
     # def OnEventLoop1(self):
     #     self.Print('every second')
     #     pass
@@ -130,6 +135,11 @@ class StateControlEXT(BaseEXT):
         scene_op.expr = "op('/project1/output/' +  me.par.Scenename.eval())" 
         scene_op.readOnly = True
         pars.append(scene_op)
+
+        main_window_open = ParTemplate('MainWindowOpen', par_type='Toggle', label='MainWindowOpen')
+        main_window_open.expr = "op('/main').isOpen"
+        main_window_open.readOnly = True
+        pars.append(main_window_open)
         # scene_name = self.Me.op('state_table')[self.Me.par.State.eval(), 'container_name'].val
         
         for par in pars:
