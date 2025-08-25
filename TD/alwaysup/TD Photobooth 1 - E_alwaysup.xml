@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<alwaysup-installservice-configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://www.coretechnologies.com/products/AlwaysUp/AlwaysUpCLT/alwaysup_installservice.xsd">
+   <version>16.5.4.33</version>
+   <name>TD Photobooth 1 - E</name>
+   <description>This application is being managed by AlwaysUp (https://www.coretechnologies.com/products/AlwaysUp/). Please make changes with AlwaysUp.</description>
+   <general>
+      <application-path>C:\Users\User\Documents\GitHub\CADI-USOPEN-PHOTOBOOTH\TD\start_photobooth_1.bat</application-path>
+      <start-directory>C:\Users\User\Documents\GitHub\CADI-USOPEN-PHOTOBOOTH\TD</start-directory>
+      <set-priority priority="normal"/>
+      <start type="automatically"/>
+   </general>
+   <log-on-as-system/>
+   <monitor>
+      <restart>
+         <when-app-crashes/>
+         <stop-after num-attempts="5" num-minutes="1"/>
+      </restart>
+      <dismiss-messageboxes/>
+   </monitor>
+   <notification>
+      <email>
+         <send/>
+      </email>
+   </notification>
+   <startup>
+      <restore-network-drives/>
+   </startup>
+</alwaysup-installservice-configuration>

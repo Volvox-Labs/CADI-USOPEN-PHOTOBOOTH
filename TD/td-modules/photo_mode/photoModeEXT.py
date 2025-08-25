@@ -53,7 +53,6 @@ class PhotoModeEXT(PhotoboothSceneEXT):
         pass
 
     def HandlePhotoButtonPress(self, button_name: str) -> None:
-        print("here ")
         # If the button is not pressed 
         if not self.Me.par.Buttonpressed.eval():
             # If fade is in complete you can start countdown 

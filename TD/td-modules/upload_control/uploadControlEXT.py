@@ -43,13 +43,14 @@ class UploadControlEXT(BaseEXT):
         op.photo_capture.par.Showerrormessage = 1
         op.comfyui_control.par.Gotpromptid = False
         op.comfyui_control.par.Waitforcompletion = False
-        # op("loading_timer").par.initialize.pulse()
         op.state_control.HandleRetryExperience()
-        op.state_control.par.Sceneop.eval().par.Exitscene.pulse()
-    #     op.loading_control.par.Canfinish = 1
-	# 	op.loading_control.HandleLoadingCanFinish()
-	# 	pass
+        pass
 
+    
+    def HandleNoResponse(self):
+        self.HandleFailedUpload()
+        op.qrcode_scene.par.Exitscene.pulse()
+        pass
     
     def HandleReceiveText(self, client, text):
         self.Me.par.Uploaderconnected = True
@@ -70,10 +71,12 @@ class UploadControlEXT(BaseEXT):
                         op.upload_control.par.Status = "complete"
                         if op.state_control.par.Scenename.eval() == "qrcode_scene":
                             op.qrcode_scene.par.Showqrcode = 1
+                            op.qrcode_scene.op("timeout_timer").par.initialize.pulse()
                     else:
                         self.Logger.debug(f"No QR code path found in response from {client}")
-                elif response["status"] == "video_upload_failed":
+                elif response["status"] == "video_upload_error":
                     op.upload_control.par.Status = "error"
+                    self.HandleFailedUpload()
                     self.Logger.debug(f"Video upload failed for {client}")
                 elif response["status"] == "heartbeat":
                     self.Logger.debug(f"Heartbeat received from {client}")
@@ -97,6 +100,7 @@ class UploadControlEXT(BaseEXT):
         msg = {"task":"process_and_upload","file_name": movie}
         op.upload_control.op("webserver1").webSocketSendText(self.ws_client,json.dumps(msg))
         op.upload_control.par.Status = "processing"
+        op.qrcode_scene.par.Showqrcode = 0
         print("sent upload ")
         pass
 
