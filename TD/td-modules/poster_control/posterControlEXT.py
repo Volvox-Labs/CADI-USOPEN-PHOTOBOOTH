@@ -26,7 +26,7 @@ class PosterControlEXT(BaseEXT):
         return True
 
     def CreateTakeaway(self):
-        print("Creating takeaway ")
+        self.Logger.debug("Creating takeaway ")
         self.Me.op("intro_timer").par.initialize.pulse()
         self.Me.op("poster_timer").par.initialize.pulse()
         self.Me.op("scale_timer").par.initialize.pulse()
@@ -41,7 +41,7 @@ class PosterControlEXT(BaseEXT):
         self.CreateTakeaway()
 
     def HandleRecordingComplete(self):
-        print("Recording Complete ")
+        self.Logger.debug("Recording Complete ")
         op.loading_control.par.Canfinish = 1
         op.poster_control.par.Takeawayrecording = 0
         op.loading_control.HandleLoadingCanFinish()
@@ -64,7 +64,7 @@ class PosterControlEXT(BaseEXT):
     #     return
 
     # def OnEventLoop1(self):
-    #     self.Print('every second')
+    #     self.self.Logger.debug('every second')
     #     pass
 
     def _createControlsPage(self) -> None:

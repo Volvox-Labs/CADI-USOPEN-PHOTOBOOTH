@@ -33,14 +33,12 @@ class StateControlEXT(BaseEXT):
         pass
 
     def HandleSceneTimeout(self):
-        print("sene timeout ")
-        print("Setting next state to video attract")
         self.Me.par.Nextstate = self.VideoAttractScene
         op.state_control.par.Sceneop.eval().par.Exitscene.pulse()
         pass
     
     def HandleRetryExperience(self):
-        print("Retrying Experience")
+        self.Logger.debug("Retrying Experience")
         states = op.state_control.op("state_table")
         op.upload_control.par.Status = "inactive"
         op.qrcode_scene.par.Showqrcode = 0
@@ -49,7 +47,6 @@ class StateControlEXT(BaseEXT):
         for index, row in enumerate(states.rows()):
             if index > 2:
                 scene = (states[index,"container_name"])
-                print("Resetting button pressed for scene:", scene)
                 op(f"/project1/output/{scene}").par.Buttonpressed = False
         pass
 
@@ -65,7 +62,7 @@ class StateControlEXT(BaseEXT):
             if index > 0:
                 scene = (states[index,"container_name"])
                 op(f"/project1/output/{scene}").par.Buttonpressed = False
-        print("Experience Complete pars set ")
+        self.Logger.debug("Experience Complete pars set ")
     
     def HandleFadeOutComplete(self):
         # next_state = self.Me.op("state_table")[self.Me.par.State, "goto"].val
@@ -97,7 +94,7 @@ class StateControlEXT(BaseEXT):
     # Below is an example of creating an event loop by overriding the OnFrameStart method.
 
     def OnStart(self):
-        print("\n\n\nPROJECT STARTED \n\n\n")
+        self.Logger.debug("\n\n\nPROJECT STARTED \n\n\n")
         self.Reset()
         op.camera_control.par.Usetestcapture = 0
         op.poster_control.par.Usetestcapture = 0
@@ -106,11 +103,11 @@ class StateControlEXT(BaseEXT):
 
     def _onMainwindowopen(self,par):
         if not par:
-            print("WINDOW CLOSED REOPENING ")
+            self.Logger.debug("WINDOW CLOSED REOPENING ")
             op("/main").par.winopen.pulse()
 
     # def OnEventLoop1(self):
-    #     self.Print('every second')
+    #     self.self.Logger.debug('every second')
     #     pass
 
 

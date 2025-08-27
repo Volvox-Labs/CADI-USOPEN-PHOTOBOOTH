@@ -20,7 +20,7 @@ class PhotoboothSceneEXT(BaseEXT):
         pass
 
     def _onEnterscene(self):
-        self.Print('Entering Photobooth Scene')
+        self.Logger.debug('Entering Photobooth Scene')
         op.fade_control.par.Fadein.pulse()
         self.Me.par.Buttonpressed = 0
         op.state_control.par.Nextstate = op.state_control.op("state_table")[op.state_control.Me.par.State, "goto"].val
@@ -28,16 +28,16 @@ class PhotoboothSceneEXT(BaseEXT):
         pass
     
     def _onExitscene(self):
-        self.Print('Exiting Photobooth Scene')
+        self.Logger.debug('Exiting Photobooth Scene')
         op.fade_control.par.Fadeout.pulse()
         pass
     
     # def _onButtonpress(self):
-    #     print(self.Me.name)
+    #     self.Logger.debug(self.Me.name)
     #     self.Me.par.Buttonpressed = 1
     
     def HandleButtonPress(self, current_scene):
-        print(f"Handling button press for scene: {current_scene}")
+        self.Logger.debug(f"Handling button press for scene: {current_scene}")
         current_scene = self.Me.name
         op.state_control.op("idle_timeout").par.initialize.pulse()
         self.Me.par.Buttonpress.pulse()
@@ -70,7 +70,7 @@ class PhotoboothSceneEXT(BaseEXT):
     #     return 
 
     # def OnEventLoop1(self):
-    #     self.Print('every second')
+    #     self.self.Logger.debug('every second')
     #     pass
 
 

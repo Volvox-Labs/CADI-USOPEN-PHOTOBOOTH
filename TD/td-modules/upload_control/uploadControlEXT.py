@@ -85,7 +85,7 @@ class UploadControlEXT(BaseEXT):
                     self.Logger.debug(f"Received unknown status from {client}: {response}")
         
     def HandleDisconnect(self, client):
-        print("Client disconnected: ", client)
+        self.Logger.debug(f"Client disconnected: {client}")
         self.Me.par.Currentclient = ""
         pass
     
@@ -96,12 +96,12 @@ class UploadControlEXT(BaseEXT):
 
     def _onUploadvideo(self):
         movie = self.GetTakeawayFileName()
-        print("uploading movie: ", movie)
+        self.Logger.debug(f"uploading movie: {movie}")
         msg = {"task":"process_and_upload","file_name": movie}
         op.upload_control.op("webserver1").webSocketSendText(self.ws_client,json.dumps(msg))
         op.upload_control.par.Status = "processing"
         op.qrcode_scene.par.Showqrcode = 0
-        print("sent upload ")
+        self.Logger.debug("sent upload ")
         pass
 
     def HandleUploaderHealthCheck(self):
@@ -128,7 +128,7 @@ class UploadControlEXT(BaseEXT):
     #     return 
 
     # def OnEventLoop1(self):
-    #     self.Print('every second')
+    #     self.self.Logger.debug('every second')
     #     pass
 
 

@@ -64,7 +64,7 @@ class PhotoSelectEXT(PhotoboothSceneEXT):
             super().HandleButtonPress(self.Me.name)
 
     def HandleImageSelected(self, channel, button_state):
-        print(
+        self.Logger.debug(
             f"HandleImageSelected - channel: {channel.name}, button_state: {button_state}")
         image_index = channel.name.replace('button', '')
         self.Me.op(f"photo_button{self.Me.par.Selectedphoto}").par.Clicked = 0

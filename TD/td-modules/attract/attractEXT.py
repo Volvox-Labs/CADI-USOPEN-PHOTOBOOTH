@@ -43,13 +43,10 @@ class AttractEXT(PhotoboothSceneEXT):
     #     self.Print('every second')
     #     pass
     def _createControlsPage(self) -> None:
-        print("Creatin g")
         page = self.GetPage('Controls')
         pars = [
             ParTemplate('EnterScene', par_type='Pulse', label='EnterScene'),
             ParTemplate('ExitScene', par_type='Pulse', label='ExitScene'),
         ]
         for par in pars:
-            print(page)
             par.createPar(page)
-        print("Done creating")

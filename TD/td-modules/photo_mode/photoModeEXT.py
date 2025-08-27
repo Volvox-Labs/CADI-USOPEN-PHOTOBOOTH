@@ -35,7 +35,6 @@ class PhotoModeEXT(PhotoboothSceneEXT):
         pass
 
     def HandleZoom(self, zoom_amt):
-        print("zoom", op("constant2").par.const0value)
         if self.Me.par.Buttonpressed:
             return
         current_zoom = (op("constant2").par.const0value)
@@ -43,7 +42,6 @@ class PhotoModeEXT(PhotoboothSceneEXT):
             op("constant2").par.const0value = current_zoom + 1
         elif zoom_amt == 0 and current_zoom > 0:
             op("constant2").par.const0value = current_zoom - 1
-        print("zoom", op("constant2").par.const0value)
         pass
     
     def HandleTakePicture(self):
@@ -62,12 +60,12 @@ class PhotoModeEXT(PhotoboothSceneEXT):
                 # Otherwise let fade in complete and then start countdown
                 self.Me.par.Buttonpressed = 1
         # else:
-        #     print("setting button pressed")
+        #     self.Logger.debug("setting button pressed")
         #     self.Me.par.Buttonpressed = 1
         pass
 
     def HandleButtonPress(self, button_name: str) -> None:
-        print("starting countdown timer")
+        self.Logger.debug("starting countdown timer")
         op("countdown_timer").par.start.pulse()
         pass
 
@@ -83,7 +81,7 @@ class PhotoModeEXT(PhotoboothSceneEXT):
     #     return 
 
     # def OnEventLoop1(self):
-    #     self.Print('every second')
+    #     self.self.Logger.debug('every second')
     #     pass
 
     def _createCustomPars(self) -> None:

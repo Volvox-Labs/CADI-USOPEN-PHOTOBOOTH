@@ -198,16 +198,16 @@ class ComfyuiControlEXT(BaseEXT):
 	
 
 	def MakeRequest(self):
-		print("requesting comfy ui")
+		self.Logger.debug("requesting comfy ui")
 		prompt = json.loads(self.prompt_text)
 	#set the text prompt for our positive CLIPTextEncode
 		sourceFile = str(self.Me.par.Currentcapture.eval())
 		prompt["12"]["inputs"]["image"] = sourceFile
-		print("sourceFile: ", sourceFile)
+		self.Logger.debug(f"sourceFile: {sourceFile}")
 		p = {"prompt": prompt}
 		data = json.dumps(p).encode('utf-8')        
 		self.Me.op("webclient1").request(f"{self.comfyui_url}/prompt","POST", data=data)
-		print("Request Sent ")
+		
 		pass
 
 	def RequestComfy(self):
@@ -215,36 +215,31 @@ class ComfyuiControlEXT(BaseEXT):
 		self.Me.par.Waitforcompletion = True
 		self.Me.par.Gotpromptid = False
 		self.Me.op('completion_timer').par.start.pulse()
-		print("Made Request to Comfy, starting pulse to find response")
+		self.Logger.debug("Made Request to Comfy, starting pulse to find response")
 		pass
 		
 	def CheckIfWorkflowComplete(self, prompt_id, prompt_data, row_index):
 		if not prompt_data["status"]:
-			print("Prompt ID not found yet")
+			self.Logger.debug("Prompt ID not found yet")
 		else:
-			# print(prompt_data)
 			status = prompt_data["status"]
-			print(status["status_str"])
+			self.Logger.debug(f"Status Response from comfy {status['status_str']}")
 			current_id = (prompt_data["status"]["messages"][2][1]["prompt_id"])
 			if status["status_str"] == "success":
-				#print(f"✅ Prompt {prompt_id} finished.")
 				
 				self.Me.par.Waitforcompletion = False
-				print("The Prompt  Completed:  " + status["status_str"])  # Return the full prompt result if needed
 				handstat = (prompt_data["outputs"]["36"]["text"][0])
-				print(type(handstat))
-				print("Hand Status: " + handstat)
 
 				if handstat == "True":
-					print("GOT A HAND")
+					self.Logger.debug("Hand Detected, Handling Failure ")
 					self.HandleFailedResponse()
 				else:
 					
-					print("NO HAND")
+					self.Logger.debug("No Hand, Moving on to next step")
 					images = prompt_data["outputs"]["90"]["images"]
 					if images:
 						image_path = images[0]["filename"]
-						print("file path: " + str(image_path))
+						self.Logger.debug(f"file path: {str(image_path)}")
 						op("result").replaceRow(0, str(image_path))
 						if not op.poster_control.CheckForEmptyMask():
 							op.poster_control.CreateTakeaway()				
@@ -262,11 +257,11 @@ class ComfyuiControlEXT(BaseEXT):
 		self.Me.par.Gotcomfyheartbeat = True 
 		self.Me.op("heartbeat_wait").par.initialize.pulse()
 		if "prompt_id" in response and len(response) == 3:
-			print("Got prompt id: ", response["prompt_id"])
+			self.Logger.debug(f"Got prompt id: {response['prompt_id']}")
 			self.Me.par.Gotpromptid = True
 			self.Me.par.Currentcomfyid = response["prompt_id"]
 		elif self.Me.par.Waitforcompletion and self.Me.par.Gotpromptid and op.comfyui_control.par.Currentcomfyid.eval() in response:
-			print("Checking if workflow complete for  ", op.comfyui_control.par.Currentcomfyid.eval())
+			self.Logger.debug(f"Checking if workflow complete for  {op.comfyui_control.par.Currentcomfyid.eval()}")
 			self.CheckIfWorkflowComplete(op.comfyui_control.par.Currentcomfyid.eval(), response[op.comfyui_control.par.Currentcomfyid.eval()],0)
 		else:
 			pass
@@ -285,7 +280,7 @@ class ComfyuiControlEXT(BaseEXT):
 		pass
 	
 	def HandleFailedResponse(self):
-		print("Failed to get response from ComfyUI")
+		self.Logger.debug("Failed to get response from ComfyUI")
 		self.Me.par.Waitforcompletion = False
 		op.state_control.par.Nextstate = self.retake_photo_state_id
 		op.photo_capture.par.Showerrormessage = 1
@@ -296,7 +291,7 @@ class ComfyuiControlEXT(BaseEXT):
 		pass
 
 	def HandleNoResponse(self):
-		print("No Response from ComfyUI")
+		self.Logger.debug("No Response from ComfyUI")
 		self.HandleFailedResponse()
 		pass
 

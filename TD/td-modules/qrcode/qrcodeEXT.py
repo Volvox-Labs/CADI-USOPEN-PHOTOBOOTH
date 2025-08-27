@@ -46,7 +46,7 @@ class QrcodeEXT(PhotoboothSceneEXT):
         if op.upload_control.par.Status.eval() == "complete":
             self.Me.par.Showqrcode = 1
         else:
-            print("Upload not complete, skipping loading bar pulse.")
+            self.Logger.debug("Upload not complete, skipping loading bar pulse.")
             self.Me.op("timeout_timer").par.start.pulse()
         
         op.fade_control.par.Fadein.pulse()
