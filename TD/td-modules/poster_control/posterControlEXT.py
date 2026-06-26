@@ -19,6 +19,7 @@ class PosterControlEXT(BaseEXT):
         BaseEXT.__init__(self, myop, par_callback_on=True)
         self.Me.par.opshortcut = 'poster_control'
         self._createControlsPage()
+
         pass
 
     def OnInit(self):
@@ -27,14 +28,15 @@ class PosterControlEXT(BaseEXT):
 
     def CreateTakeaway(self):
         self.Logger.debug("Creating takeaway ")
-        self.Me.op("intro_timer").par.initialize.pulse()
-        self.Me.op("poster_timer").par.initialize.pulse()
-        self.Me.op("scale_timer").par.initialize.pulse()
+        self.Me.op("movie_timer").par.initialize.pulse()
         timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
         filename = f"sharable_{timestamp}.mp4"
         self.Me.par.Filename = filename
+        takeaway_output_path = self.Me.par.Takeawayoutputpath + filename
+        self.Logger.debug(f"Writing to {takeaway_output_path}")
+        op.upload_control.par.Filepath = takeaway_output_path
         # op("camera_capture").par.file = self.Me.par.Outputpath + filename
-        self.Me.op("intro_timer").par.start.pulse()
+        self.Me.op("movie_timer").par.start.pulse()
         pass
 
     def _onRecordtakeaway(self):
@@ -42,10 +44,9 @@ class PosterControlEXT(BaseEXT):
 
     def HandleRecordingComplete(self):
         self.Logger.debug("Recording Complete ")
-        op.loading_control.par.Canfinish = 1
         op.poster_control.par.Takeawayrecording = 0
-        op.loading_control.HandleLoadingCanFinish()
-        self.Me.op("intro_timer").par.initialize.pulse()
+        op.upload_control.par.Uploadvideo.pulse()
+        self.Me.op("movie_timer").par.initialize.pulse()
     pass
 
     def CheckForEmptyMask(self):
@@ -87,6 +88,7 @@ class PosterControlEXT(BaseEXT):
                         label="RecordTakeaway"),
             ParTemplate("TakeawayOutputPath", par_type="Str",
                         label="TakeawayOutputPath"),
+            ParTemplate("FootageStartFrame",par_type="Int",label="FootageStartFrame"),
             takeaway_recording_toggle,
         ]
         for par in pars:

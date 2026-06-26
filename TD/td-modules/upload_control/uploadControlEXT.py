@@ -68,19 +68,19 @@ class UploadControlEXT(BaseEXT):
                     if qr_code_path:
                         op.qrcode_scene.op("qrcode_file").par.file = qr_code_path
                         self.Logger.debug(f"QR code path for {client}: {qr_code_path}")
-                        op.upload_control.par.Status = "complete"
-                        if op.state_control.par.Scenename.eval() == "qrcode_scene":
-                            op.qrcode_scene.par.Showqrcode = 1
-                            op.qrcode_scene.op("timeout_timer").par.initialize.pulse()
+                        # op.upload_control.par.Status = "complete"
+                        # if op.state_control.par.Scenename.eval() == "qrcode_scene":
+                        #     op.qrcode_scene.par.Showqrcode = 1
+                        #     op.qrcode_scene.op("timeout_timer").par.initialize.pulse()
                     else:
                         self.Logger.debug(f"No QR code path found in response from {client}")
                 elif response["status"] == "video_upload_error":
                     op.upload_control.par.Status = "error"
-                    self.HandleFailedUpload()
+                    # self.HandleFailedUpload()
                     self.Logger.debug(f"Video upload failed for {client}")
                 elif response["status"] == "heartbeat":
-                    self.Logger.debug(f"Heartbeat received from {client}")
-                
+                    # self.Logger.debug(f"Heartbeat received from {client}")
+                    return
                 else:
                     self.Logger.debug(f"Received unknown status from {client}: {response}")
         
@@ -95,12 +95,12 @@ class UploadControlEXT(BaseEXT):
         return op.poster_control.par.Takeawayoutputpath + colors[selected_poster_index] + "_" + op.poster_control.par.Filename
 
     def _onUploadvideo(self):
-        movie = self.GetTakeawayFileName()
+        print("uploading")
+        movie = self.Me.par.Filepath.eval()
         self.Logger.debug(f"uploading movie: {movie}")
         msg = {"task":"process_and_upload","file_name": movie}
         op.upload_control.op("webserver1").webSocketSendText(self.ws_client,json.dumps(msg))
         op.upload_control.par.Status = "processing"
-        op.qrcode_scene.par.Showqrcode = 0
         self.Logger.debug("sent upload ")
         pass
 
@@ -143,12 +143,16 @@ class UploadControlEXT(BaseEXT):
         uploader_connected.readOnly = True
         got_uploader_heartbeat = ParTemplate("GotUploaderHeartbeat", par_type='Toggle', label='GotUploaderHeartbeat')
         got_uploader_heartbeat.readOnly = True
+        
         pars = [
             ParTemplate('UploadVideo', par_type='Pulse', label='UploadVideo'),
             status_par,
             current_client_par,
             uploader_connected,
-            got_uploader_heartbeat
+            got_uploader_heartbeat,
+            ParTemplate("UseOverride",par_type="Toggle",label="UseOverride"),
+            ParTemplate("FilePath",par_type="File",label="FilePath")
+            
         ]
         for par in pars:
             par.createPar(page)
