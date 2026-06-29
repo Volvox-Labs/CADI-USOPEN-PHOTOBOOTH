@@ -44,16 +44,16 @@ IF EXIST %TOUCHPATH% (
 
 :: BEGIN ENV VARIABLES 
 set MODE=production
-set assets_path=C:\Users\VVOX_NUC_0724\asset_sync\assets\
+set assets_path=assets\
 set comfyui_url=http://localhost:8188
 set comfyui_inputs_dir=C:/ComfyUI_windows_portable/ComfyUI_windows_portable/ComfyUI/input/
 set comfyui_outputs_dir=C:/ComfyUI_windows_portable/ComfyUI_windows_portable/ComfyUI/output/
-set mosaic_output_path=C:\Users\VVOX_NUC_0724\Documents\cadi\mosaic\
+set mosaic_output_path=C:\Users\vvox\Documents\GitHub\CADI-USOPEN-PHOTOBOOTH\TD\assets\mosaic
 set status_view_monitor_index=0
 :: Monitor index should be set based on which touch monitor you want to use
 set monitor_index=1
 set blackmagic_camera_index=0
-set takeaways_render_dir=C:\Users\VVOX_NUC_0724\Documents\cadi\renders\
+set takeaways_render_dir=C:\Users\vvox\Documents\GitHub\CADI-USOPEN-PHOTOBOOTH\TD\assets\takeaway\
 set uploader_websocket_url=ws://localhost:9985
 set dante_channels=1:Dante_tx_1,2:Dante_tx_2
 set photobooth_id=1

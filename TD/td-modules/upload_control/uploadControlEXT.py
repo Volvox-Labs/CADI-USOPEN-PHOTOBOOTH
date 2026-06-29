@@ -19,9 +19,7 @@ class UploadControlEXT(BaseEXT):
         self._createControlsPage()
         self.Me.par.opshortcut = 'upload_control'
         #TODO this should just be set via state control 
-        photo_capture_row = op.state_control.op("state_table").findCell("photo_capture_scene").row
 
-        self.retake_photo_state_id = op.state_control.op("state_table")[photo_capture_row, "state id"].val
 
         self.ws_client = self.Me.par.Currentclient
         if self.ws_client:
@@ -39,11 +37,9 @@ class UploadControlEXT(BaseEXT):
     
     def HandleFailedUpload(self):
         self.Logger.debug("Handling Failed Upload")
-        op.state_control.par.Nextstate = self.retake_photo_state_id
         op.photo_capture.par.Showerrormessage = 1
         op.comfyui_control.par.Gotpromptid = False
         op.comfyui_control.par.Waitforcompletion = False
-        op.state_control.HandleRetryExperience()
         pass
 
     

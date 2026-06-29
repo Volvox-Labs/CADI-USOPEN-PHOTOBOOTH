@@ -19,7 +19,7 @@ class PosterControlEXT(BaseEXT):
         BaseEXT.__init__(self, myop, par_callback_on=True)
         self.Me.par.opshortcut = 'poster_control'
         self._createControlsPage()
-
+        print("Done")
         pass
 
     def OnInit(self):
@@ -134,5 +134,6 @@ class PosterControlEXT(BaseEXT):
         pars = [enable_style_mode_par,scale_par,translate_y_par, profile_scale_par, profile_transform_x_par, profile_transform_y_par, althea_scale_par, althea_transform_x_par, althea_transform_y_par]
         for par in pars:
             par.createPar(page)
+        print("Finished making pars")
 
         pass
