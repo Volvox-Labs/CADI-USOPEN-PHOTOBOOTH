@@ -64,6 +64,7 @@ class UploadControlEXT(BaseEXT):
                     if qr_code_path:
                         op.qrcode_scene.op("qrcode_file").par.file = qr_code_path
                         self.Logger.debug(f"QR code path for {client}: {qr_code_path}")
+                        op.qrcode_scene.op("moviefilein1").par.reloadpulse.pulse()
                         # op.upload_control.par.Status = "complete"
                         # if op.state_control.par.Scenename.eval() == "qrcode_scene":
                         #     op.qrcode_scene.par.Showqrcode = 1

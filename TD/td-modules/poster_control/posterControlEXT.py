@@ -47,6 +47,7 @@ class PosterControlEXT(BaseEXT):
         op.poster_control.par.Takeawayrecording = 0
         op.upload_control.par.Uploadvideo.pulse()
         self.Me.op("movie_timer").par.initialize.pulse()
+
     pass
 
     def CheckForEmptyMask(self):
