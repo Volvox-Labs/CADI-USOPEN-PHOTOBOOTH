@@ -1,6 +1,5 @@
 # pylint: disable=missing-docstring,logging-fstring-interpolation
 from vvox_tdtools.base import BaseEXT
-import json
 from vvox_tdtools.parhelper import ParTemplate
 try:
     # import td
@@ -18,99 +17,57 @@ class UploadControlEXT(BaseEXT):
         BaseEXT.__init__(self, myop, par_callback_on=True)
         self._createControlsPage()
         self.Me.par.opshortcut = 'upload_control'
-        #TODO this should just be set via state control 
-
-
-        self.ws_client = self.Me.par.Currentclient
-        if self.ws_client:
-            op.upload_control.op("webserver1").webSocketSendText(self.ws_client,json.dumps({"task":"startup","message": "connected"}))
-        
+        #TODO this should just be set via state control
         pass
 
     def OnInit(self):
         # return False if initialization fails
         return True
 
-    def HandleNewClient(self,client):        
-        self.Me.par.Currentclient = client
-        pass
-    
     def HandleFailedUpload(self):
         self.Logger.debug("Handling Failed Upload")
-        op.photo_capture.par.Showerrormessage = 1
-        op.comfyui_control.par.Gotpromptid = False
-        op.comfyui_control.par.Waitforcompletion = False
+        # op.photo_capture.par.Showerrormessage = 1
+        # op.comfyui_control.par.Gotpromptid = False
+        # op.comfyui_control.par.Waitforcompletion = False
         pass
 
-    
-    def HandleNoResponse(self):
+    def HandleUploadResult(self, result):
+        if not result:
+            self.Logger.debug("HandleUploadResult called with no result")
+            return
+        status = result.get("status")
+        if status == "video_upload_success":
+            qr_code_path = result.get("qr_code_path")
+            if qr_code_path:
+                op.qrcode_scene.op("qrcode_file").par.file = qr_code_path
+                self.Logger.debug(f"QR code path: {qr_code_path}")
+                op.upload_control.par.Status = "complete"
+            else:
+                self.Logger.debug("No QR code path found in upload result")
+        elif status == "video_upload_error":
+            op.upload_control.par.Status = "error"
+            self.Logger.debug(f"Video upload failed: {result.get('message')}")
+        else:
+            self.Logger.debug(f"Received unknown upload result: {result}")
+
+    def HandleUploadException(self, args):
+        self.Logger.error(f"Upload thread raised an exception: {args}")
+        op.upload_control.par.Status = "error"
         self.HandleFailedUpload()
-        op.qrcode_scene.par.Exitscene.pulse()
-        pass
-    
-    def HandleReceiveText(self, client, text):
-        self.Me.par.Uploaderconnected = True
-        self.Me.par.Gotuploaderheartbeat = True
-        self.Me.op("heartbeat_wait").par.initialize.pulse()
-        if text and text !="null":
-            
-            response = json.loads(text)
-            if "status" in response:
-                if response["status"] == "video_upload_success":
-                    self.Logger.debug(f"Received text from {client}: {response}")
-                    if "qr_code_path" not in response:
-                        return
-                    qr_code_path = response["qr_code_path"]
-                    if qr_code_path:
-                        op.qrcode_scene.op("qrcode_file").par.file = qr_code_path
-                        self.Logger.debug(f"QR code path for {client}: {qr_code_path}")
-                        op.qrcode_scene.op("moviefilein1").par.reloadpulse.pulse()
-                        # op.upload_control.par.Status = "complete"
-                        # if op.state_control.par.Scenename.eval() == "qrcode_scene":
-                        #     op.qrcode_scene.par.Showqrcode = 1
-                        #     op.qrcode_scene.op("timeout_timer").par.initialize.pulse()
-                    else:
-                        self.Logger.debug(f"No QR code path found in response from {client}")
-                elif response["status"] == "video_upload_error":
-                    op.upload_control.par.Status = "error"
-                    # self.HandleFailedUpload()
-                    self.Logger.debug(f"Video upload failed for {client}")
-                elif response["status"] == "heartbeat":
-                    # self.Logger.debug(f"Heartbeat received from {client}")
-                    return
-                else:
-                    self.Logger.debug(f"Received unknown status from {client}: {response}")
-        
-    def HandleDisconnect(self, client):
-        self.Logger.debug(f"Client disconnected: {client}")
-        self.Me.par.Currentclient = ""
-        pass
-    
+
     def GetTakeawayFileName(self):
         colors = ["blue","red","white","yellow"]
         selected_poster_index = int(op.photo_select.par.Selectedphoto.eval()) - 1
         return op.poster_control.par.Takeawayoutputpath + colors[selected_poster_index] + "_" + op.poster_control.par.Filename
 
     def _onUploadvideo(self):
-        print("uploading")
         movie = self.Me.par.Filepath.eval()
         self.Logger.debug(f"uploading movie: {movie}")
-        msg = {"task":"process_and_upload","file_name": movie}
-        op.upload_control.op("webserver1").webSocketSendText(self.ws_client,json.dumps(msg))
         op.upload_control.par.Status = "processing"
-        self.Logger.debug("sent upload ")
+        self.Me.op("threadManagerClient").par.Runinthread.pulse()
+        self.Logger.debug("started upload thread")
         pass
 
-    def HandleUploaderHealthCheck(self):
-        self.Me.par.Gotuploaderheartbeat = False
-        self.Me.op("heartbeat_wait").par.start.pulse()
-        op.upload_control.op("webserver1").webSocketSendText(self.ws_client,json.dumps({"task":"heartbeat", "message": "connected"}))
-        pass
-    
-    def HandleUploaderHealthcheckTimeout(self):
-        if not self.Me.par.Gotuploaderheartbeat:
-            self.Me.par.Uploaderconnected = False
-        pass
     # Below is an example of a parameter callback. Simply create a method that starts with "_on" and then the name of the parameter.
 
     # def _onExampletoggle(self, par):
@@ -133,23 +90,14 @@ class UploadControlEXT(BaseEXT):
         page = self.GetPage('Controls')
         status_par = ParTemplate('Status', par_type='Str', label='Status')
         status_par.readOnly = True
-        status_par.default = "inactive" 
-        current_client_par = ParTemplate('CurrentClient', par_type='Str', label='Current Client')
-        current_client_par.readOnly = True
-        uploader_connected = ParTemplate("UploaderConnected", par_type='Toggle', label='UploaderConnected')
-        uploader_connected.readOnly = True
-        got_uploader_heartbeat = ParTemplate("GotUploaderHeartbeat", par_type='Toggle', label='GotUploaderHeartbeat')
-        got_uploader_heartbeat.readOnly = True
-        
+        status_par.default = "inactive"
+
         pars = [
             ParTemplate('UploadVideo', par_type='Pulse', label='UploadVideo'),
             status_par,
-            current_client_par,
-            uploader_connected,
-            got_uploader_heartbeat,
             ParTemplate("UseOverride",par_type="Toggle",label="UseOverride"),
             ParTemplate("FilePath",par_type="File",label="FilePath")
-            
+
         ]
         for par in pars:
             par.createPar(page)

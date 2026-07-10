@@ -23,10 +23,10 @@ FOR /F "usebackq tokens=1* delims==" %%i IN (.env.sample) DO (
 )
 
 :: TouchDesigner build numbers
-set TOUCHVERSION=2023.12120
+set TOUCHVERSION=2025.32280
 
 :: set our project file target
-set TOEFILE="cadi-usopen-photobooth.toe"
+set TOEFILE="project_template.toe"
 
 :: set the rest of our paths for executables
 set TOUCHDIR=%PROGRAMFILES%\Derivative\TouchDesigner.
