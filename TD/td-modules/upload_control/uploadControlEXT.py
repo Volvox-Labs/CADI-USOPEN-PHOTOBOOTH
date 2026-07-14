@@ -27,8 +27,7 @@ class UploadControlEXT(BaseEXT):
     def HandleFailedUpload(self):
         self.Logger.debug("Handling Failed Upload")
         # op.photo_capture.par.Showerrormessage = 1
-        # op.comfyui_control.par.Gotpromptid = False
-        # op.comfyui_control.par.Waitforcompletion = False
+
         pass
 
     def HandleUploadResult(self, result):
@@ -95,7 +94,6 @@ class UploadControlEXT(BaseEXT):
         pars = [
             ParTemplate('UploadVideo', par_type='Pulse', label='UploadVideo'),
             status_par,
-            ParTemplate("UseOverride",par_type="Toggle",label="UseOverride"),
             ParTemplate("FilePath",par_type="File",label="FilePath")
 
         ]
